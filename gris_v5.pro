@@ -393,7 +393,7 @@ for jj=0,nmap_in-1 do begin
          pos=strpos(hdr(j),'DATAVERS=')
          if(pos ne -1) then begin
             strput,header,string(format='(i20)',fix(1)),pos+10
-            tit='data version (I->Q,U,V crosstalk corrected)
+            tit='data version (I->Q,U,V crosstalk corrected)'
             format_tit='(A'+strtrim(strlen(tit),2)+')'
             strput,header,string(format=format_tit,tit),pos+33
          endif
