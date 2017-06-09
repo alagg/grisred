@@ -7,7 +7,6 @@ if(keyword_set(dd2) eq 0) then dd2=0
 
 file=fileff
 dc=rfits_im(file,1,dd,hdr,nrhdr,/badpix)>0
-
 time=param_fits(hdr,'UT      =',delimiter=':',vartype=1)
 time=time(*,0)+(time(*,1)+time(*,2)/60.)/60.
 
@@ -78,9 +77,8 @@ for j=0,tam1[1]-1 do esp1[j]=median(sub1[j,*])
 for j=0,tam2[1]-1 do esp2[j]=median(sub2[j,*])
 
 esp=(esp1+esp2)/2.
-cont=continuum(esp,5)
+cont=continuum(esp,5,/fts)
 esp=esp*mean(cont)/cont
-
 ;;mcv
 ;fesp=abs(fft(esp-mean(esp)))
 ;z=where(fesp[70:300] eq max(fesp[70:300]))
