@@ -1,9 +1,12 @@
 pro gris_v5,map_in_base,fileff,filecalib,display=display,$
-   teles=teles,bitpix=bitpix,desp=desp,factor=factor,mast=mast,theta=theta,$
-   filt=filt,data=data,option=option,step=step,old=old,getdata=getdata,$
-   lambda=lambda,noxtalk=noxtalk,filebad=filebad,pzero=pzero,xtau=xtau,dust=dust,$
-   maxshift=maxshift,checksync=checksync,$	ang_PCU2_az=ang_PCU2_az,$
-   denoise_fft=denoise_fft 	;denoise keyword, added by A. Lagg, Oct05
+            teles=teles,bitpix=bitpix,desp=desp,factor=factor, $
+            mast=mast,theta=theta,filt=filt,data=data,option=option, $
+            step=step,old=old,getdata=getdata, $
+            lambda=lambda,order=order,noxtalk=noxtalk,filebad=filebad, $
+            pzero=pzero,xtau=xtau,dust=dust,$
+            maxshift=maxshift,checksync=checksync,$
+            ang_PCU2_az=ang_PCU2_az,$
+            denoise_fft=denoise_fft ;denoise keyword, added by A. Lagg, Oct05
 
 parameter_mirrors,lambda,x4,tau4,x567,tau567,x8910,tau8910
 ;print,'x4,tau4,x567,tau567,x8910,tau8910 = ',x4,tau4,x567,tau567,x8910,tau8910
@@ -24,6 +27,10 @@ if(keyword_set(old) eq 0) then old=0
 if(keyword_set(getdata) eq 0) then getdata=0
 if(keyword_set(lambda) eq 0) then begin
    print,'keyword lambda (in A) is required'
+   return
+endif
+if(keyword_set(order) eq 0) then begin
+   print,'keyword order is required'
    return
 endif
 if(keyword_set(xtau) eq 0) then begin
@@ -101,7 +108,7 @@ pendiente=0
 nff=n_elements(fileff)
 
 get_flat,pathin+fileff(0),ff1,data=data,time=timeff1,corr1=dd1,corr2=dd2,$
-   lambda=lambda,ffnorm=ffnorm1,periodfr=periodfr
+   lambda=lambda,order=order,ffnorm=ffnorm1,periodfr=periodfr
 
 i1=data(0)
 i2=data(1)
