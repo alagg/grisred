@@ -4,7 +4,7 @@ function continuum,esp_in,ngrad,fts=fts,lambda=lambda,order=order
   esp=esp_in/norm
 
   if keyword_set(fts) then begin
-    cont=fit2fts(esp,show=1,lambda=lambda,order=order)
+    cont=fit2fts(esp,show=0,lambda=lambda,order=order)
   endif else begin
     imin=where(esp eq min(esp))
     imin=imin(0)
