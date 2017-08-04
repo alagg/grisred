@@ -6,7 +6,7 @@ pro gris_v5,map_in_base,fileff,filecalib,display=display,$
             pzero=pzero,xtau=xtau,dust=dust,$
             maxshift=maxshift,checksync=checksync,$
             ang_PCU2_az=ang_PCU2_az,$
-            denoise_fft=denoise_fft ;denoise keyword, added by A. Lagg, Oct05
+            show=show,denoise_fft=denoise_fft ;denoise keyword, added by A. Lagg, Oct05
 
 parameter_mirrors,lambda,x4,tau4,x567,tau567,x8910,tau8910
 ;print,'x4,tau4,x567,tau567,x8910,tau8910 = ',x4,tau4,x567,tau567,x8910,tau8910
@@ -108,7 +108,7 @@ pendiente=0
 nff=n_elements(fileff)
 
 get_flat,pathin+fileff(0),ff1,data=data,time=timeff1,corr1=dd1,corr2=dd2,$
-   lambda=lambda,order=order,ffnorm=ffnorm1,periodfr=periodfr
+   lambda=lambda,order=order,ffnorm=ffnorm1,periodfr=periodfr,show=show
 
 i1=data(0)
 i2=data(1)
