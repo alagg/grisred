@@ -132,8 +132,8 @@ endif else if(nff eq 2 and fileff(0) eq fileff(1)) then begin
    timeff2=timeff1
    ffnorm2=ffnorm1
 endif else begin   
-   get_flat,pathin+fileff(1),ff2,data=data,time=timeff2,corr1=dd1,corr2=dd2,$
-      lambda=lambda,ffnorm=ffnorm2
+  get_flat,pathin+fileff(1),ff2,data=data,time=timeff2,corr1=dd1,corr2=dd2,$
+           lambda=lambda,order=order,ffnorm=ffnorm2,show=show      
    ff2=ff2>0.1
    timeff2=mean(timeff2)
 endelse   

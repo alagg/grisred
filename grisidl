@@ -1,0 +1,44 @@
+#!/bin/bash
+
+WDIR=`dirname $0`
+echo grisred directory: $WDIR
+
+#show GIT information
+pushd . &>/dev/null
+cd $WDIR
+echo "GIT summary:"
+git show --summary
+popd &>/dev/null
+
+[ -z $FTSDIR ] && { export FTSDIR=$WDIR ;}
+echo "FTSDIR="$FTSDIR
+
+#IDL-setup
+if [ -z $IDL_PATH ] ;then
+    if [ -z $IDL_DIR ] ;then
+        echo "setup IDL environment first." 
+        exit
+    else
+        export IDL_PATH=+$IDL_DIR/lib
+    fi
+fi
+    
+export IDL_PATH=$WDIR:$WDIR/varlib:$IDL_PATH
+DASH='==================================================================='
+#create IDL startup file
+INI=$WDIR/grisini.pro
+echo "print,'$DASH'" >$INI
+echo "print,'GRIS data reduction routines'" >>$INI
+echo "print,'$DASH'" >>$INI
+echo "print,'Usage: '">>$INI
+echo "print,'gris_v5, map, fileff, filecal, lambda=lambda, order=order [, /show]'">>$INI
+echo "print,'$DASH'" >>$INI
+#append an existing startup file
+echo "device,true_color=24,decomposed=0,retain=2" >>$INI
+echo $IDL_START
+if [ ! -f $IDL_START ] ;then
+    cat $IDL_START >> $INI
+fi
+
+export IDL_STARTUP=$INI
+idl
