@@ -5,14 +5,19 @@
 ;
 ; EXPLANATION
 ;
-;    The function returns a continuum correction polynomial. This
-;    polynomial is retrieved from fitting the FTS spectrum to a GRIS
+;    The function returns a continuum correction curve. This curve is a
+;    polynomial and is retrieved from fitting the FTS spectrum to a GRIS
 ;    flat field profile.
 ;    The fitting is based on the genetic algorithm PIKAIA and has the
 ;    following free parameters:
 ;    WL-offset, WL-dispersion (both in Angstrom), the FWHM of a
 ;    spectral PSF (Gaussian), and spectral straylight contribution
 ;    (white light).
+;
+;    The fitting is only done for regions without telluric
+;    blends by setting the weight for the computation of the fitness
+;    (=1/chi^2) to zero, whenever the telluric FTS spectrum is below 0.9.
+;    
 ;
 ; INPUTS
 ;
