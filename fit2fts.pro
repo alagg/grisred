@@ -1,7 +1,56 @@
+;+
+; NAME
+;
+;    FIT2FTS
+;
+; EXPLANATION
+;
+;    The function returns a continuum correction polynomial. This
+;    polynomial is retrieved from fitting the FTS spectrum to a GRIS
+;    flat field profile.
+;    The fitting is based on the genetic algorithm PIKAIA and has the
+;    following free parameters:
+;    WL-offset, WL-dispersion (both in Angstrom), the FWHM of a
+;    spectral PSF (Gaussian), and spectral straylight contribution
+;    (white light).
+;
+; INPUTS
+;
+;    iprof - Stokes I profile
+;    lambda - approx. central wavelength of observed
+;             region in Angstrom, e.g. lambda=15650.
+;    order - grating order. Improtant for computing initial guess for
+;             WL-fitting
+;    npoly - degree of fitted polynomial 
+;
+; OUTPUTS
+;
+;     return value - continuum correction curve (same size as input
+;                    Stokes-I profile) 
+; Optional output:
+;     fit - structure containing the fit paramaters (WL-offset,
+;           WL-dispersion, FWHM of spectral Gaussian PSF (in pixel and
+;           Angstrom), spectral straylight,), the fitted WL-vector, the
+;           input Stokes I-profile normalized to the continuum,
+;           the degraded FTS profile, the continuum correction polynomial
+;           vector, the polynomial coefficients and the degree of the
+;           fitted polynomial
+;
+; CALLS
+;
+;    This routine is called from the procedure continuum.pro (GRIS
+;    data reduction package):
+;    cont=fit2fts(esp,show=show,lambda=lambda,order=order)
+;
+; HISTORY
+;
+;    Ver.1, 22-Jun-2006, Peter Young
+;-
+
 function mpfit_fts,par,xval=x,yval=y,errval=err,wgt=wgt,_extra=_extra, $
                    show=show,store=store
   common fts,ftsfull,fts,hdr
-  common prof,prof,fitset,fitpar,fitval
+  common prof,prof,fitset,fitpar,fitval,fitvalold
   
   if n_elements(y) eq 0 then y=prof
   nwl=n_elements(y)
@@ -70,7 +119,7 @@ end
 
 function fts_chi,par,show=show,store=store
   common fts,ftsfull,fts,hdrc
-  common prof,prof,fitset,fitpar,fitval
+  common prof,prof,fitset,fitpar,fitval,fitvalold
   
   ftsdeg=mpfit_fts(par,wgt=wgt,show=show,store=store)
   chisqr=total(wgt*(prof-ftsdeg)^2,/nan)
@@ -78,9 +127,22 @@ function fts_chi,par,show=show,store=store
     fitness=1./chisqr
     print,'Fitness: ',fitness
     fitval.fitness=fitness
+    !p.multi=[0,1,2]
+    yrg=minmaxp([fitval.prof,fitval.ftsdeg])
     plot,fitval.wlobs,fitval.prof,/xst,/yst,thick=1,xtitle='Wavelength [A]', $
-         title='FTS-fit, Fitness '+string(fitval.fitness,format='(f10.4)')
+         title='FTS-fit, Fitness '+string(fitval.fitness,format='(f10.4)'), $
+         yrange=yrg
     oplot,linestyle=2,fitval.wlobs,fitval.ftsdeg,thick=2
+    
+    yrg=minmaxp(fitval.poly)
+    if n_elements(fitvalold) ne 0 then yrg=minmaxp([fitval.poly,fitvalold.poly])
+    plot,fitval.wlobs,fitval.poly,/xst,/yst,thick=1,xtitle='Wavelength [A]', $
+         title='Continuum correction (polynomial fit order '+ $
+         strcompress(/remove_all,(string(fitval.npoly)))+')',yrange=yrg
+    if n_elements(fitvalold) ne 0 then begin
+      oplot,fitvalold.wlobs,fitvalold.poly,linestyle=1
+      xyouts,0,0,/normal,'dotted = previous FTS fit'
+    endif
   endif
   return,chisqr
 end
@@ -90,7 +152,7 @@ function func,n,spar
 end
 
 pro pikcall,par,statpar,f,status
-  common prof,prof,fitset,fitpar,fitval
+  common prof,prof,fitset,fitpar,fitval,fitvalold
   
 ;================================================================  
                                 ;call pikaia
@@ -162,7 +224,7 @@ end
 function fit2fts,iprof,show=show,lambda=lambda,order=order,npoly=npoly, $
                  fit=retfitval
   common fts,ftsfull,fts,hdrc
-  common prof,prof,fitset,fitpar,fitval
+  common prof,prof,fitset,fitpar,fitval,fitvalold
   common pi,pi
   common oldfit,oldfitpar
   
@@ -266,6 +328,8 @@ function fit2fts,iprof,show=show,lambda=lambda,order=order,npoly=npoly, $
   oldfitpar.order=order
   oldfitpar.wl=lambda
   oldfitpar.pi=pi
+  
+  fitvalold=fitval
   
   retfitval=fitval
   return,fitval.poly

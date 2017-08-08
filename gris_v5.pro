@@ -5,7 +5,7 @@ pro gris_v5,map_in_base,fileff,filecalib,display=display,$
             lambda=lambda,order=order,noxtalk=noxtalk,filebad=filebad, $
             pzero=pzero,xtau=xtau,dust=dust,$
             maxshift=maxshift,checksync=checksync,$
-            ang_PCU2_az=ang_PCU2_az,$
+            ang_PCU2_az=ang_PCU2_az, fts=fts,$
             show=show,denoise_fft=denoise_fft ;denoise keyword, added by A. Lagg, Oct05
 
 parameter_mirrors,lambda,x4,tau4,x567,tau567,x8910,tau8910
@@ -29,8 +29,12 @@ if(keyword_set(lambda) eq 0) then begin
    print,'keyword lambda (in A) is required'
    return
 endif
-if(keyword_set(order) eq 0) then begin
-   print,'keyword order is required'
+if n_elements(fts) eq 0 then begin
+  print,'continuum will be fitted using FTS spectrum.'
+  fts=1
+endif
+if(keyword_set(order) eq 0) and fts then begin
+   print,'keyword order is required for FTS continuum fitting.'
    return
 endif
 if(keyword_set(xtau) eq 0) then begin
@@ -108,7 +112,7 @@ pendiente=0
 nff=n_elements(fileff)
 
 get_flat,pathin+fileff(0),ff1,data=data,time=timeff1,corr1=dd1,corr2=dd2,$
-   lambda=lambda,order=order,ffnorm=ffnorm1,periodfr=periodfr,show=show
+   lambda=lambda,order=order,ffnorm=ffnorm1,periodfr=periodfr,show=show,fts=fts
 
 i1=data(0)
 i2=data(1)
@@ -133,7 +137,7 @@ endif else if(nff eq 2 and fileff(0) eq fileff(1)) then begin
    ffnorm2=ffnorm1
 endif else begin   
   get_flat,pathin+fileff(1),ff2,data=data,time=timeff2,corr1=dd1,corr2=dd2,$
-           lambda=lambda,order=order,ffnorm=ffnorm2,show=show      
+           lambda=lambda,order=order,ffnorm=ffnorm2,show=show,fts=fts
    ff2=ff2>0.1
    timeff2=mean(timeff2)
 endelse   
