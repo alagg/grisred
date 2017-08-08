@@ -44,7 +44,7 @@
 ;
 ; HISTORY
 ;
-;    Ver.1, 22-Jun-2006, Peter Young
+;    Ver.1, 08-Aug-2017, A. Lagg
 ;-
 
 function mpfit_fts,par,xval=x,yval=y,errval=err,wgt=wgt,_extra=_extra, $
