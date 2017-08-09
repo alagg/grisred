@@ -67,7 +67,7 @@ endif else begin
 endelse
 
 ;get git revision
-spawn,'pushd . &>/dev/null ; cd $GRISRED_DIR ; git show --summary ; popd &>/dev/null',gitrev
+spawn,'pushd . &>/dev/null ; cd $GRISRED_DIR ; git remote -v ; git rev-parse HEAD ; popd &>/dev/null',gitrev
 
 
 
@@ -411,7 +411,7 @@ for jj=0,nmap_in-1 do begin
         sxaddpar,hdrstr,fs+'STRAY',ftsfit[ii].stray,'spectral straylight '+fs, $
                  before='LC1-1'
         sxaddpar,hdrstr,fs+'NPOLY',ftsfit[ii].npoly, $
-                 'order of fitted polynomial'+fs,before='LC1-1'
+                 'order of fitted polynomial '+fs,before='LC1-1'
         sxaddpar,hdrstr,fs+'FITNS',ftsfit[ii].fitness, $
                  'fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
       endfor
