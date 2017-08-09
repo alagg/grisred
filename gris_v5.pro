@@ -392,11 +392,11 @@ for jj=0,nmap_in-1 do begin
       sxaddpar,hdrstr,'GITREV',gitrev[0],'grisred git revision',before='LC1-1'
       sxaddpar,hdrstr,'GITREPO',(strsplit(gitrev[1],/extract))[1], $
                'grisred git repository',before='LC1-1'
-      for ii=0,n_elements(gitrev)-1 do if gitrev[ii] ne '' then begin
-        sxaddpar,hdrstr,'GITREPO'+strcompress(/remove_all,string(igv)), $
-                 gitrev[ii],'grisred git revision',before='LC1-1'
-        igv=igv+1
-      endif
+      ;; for ii=0,n_elements(gitrev)-1 do if gitrev[ii] ne '' then begin
+      ;;   sxaddpar,hdrstr,'GITREPO'+strcompress(/remove_all,string(igv)), $
+      ;;            gitrev[ii],'grisred git revision',before='LC1-1'
+      ;;   igv=igv+1
+      ;; endif
                                 ;add FTS fit parameters
       sxaddpar,hdrstr,'FTSFLAT',keyword_set(fts),'flatfield calibration with FTS spectrum',before='LC1-1'
       if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
