@@ -296,7 +296,7 @@ function fit2fts,iprof,show=show,lambda=lambda,order=order,npoly=npoly, $
                                 ;WL-offset and dispersion)  
     fitset.polyfit=1b
     fitset.npoly=3
-    fitset.niter=50             ;pikaia iterations
+    fitset.niter=100             ;pikaia iterations
     fitset.npop=200             ;pikaia populations
     par=pi.value
     pikcall,par,statpar,f,status

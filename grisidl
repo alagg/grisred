@@ -1,16 +1,17 @@
 #!/bin/bash
 
-WDIR=`dirname $0`
-echo grisred directory: $WDIR
+export GRISRED_DIR=`dirname $0`
+echo grisred directory: $GRISRED_DIR
 
 #show GIT information
 pushd . &>/dev/null
-cd $WDIR
+cd $GRISRED_DIR
 echo "GIT summary:"
 git show --summary
+git show --summary > grisred.version
 popd &>/dev/null
 
-[ -z $FTSDIR ] && { export FTSDIR=$WDIR ;}
+[ -z $FTSDIR ] && { export FTSDIR=$GRISRED_DIR ;}
 echo "FTSDIR="$FTSDIR
 
 #IDL-setup
@@ -23,10 +24,10 @@ if [ -z $IDL_PATH ] ;then
     fi
 fi
     
-export IDL_PATH=$WDIR:$WDIR/varlib:$IDL_PATH
+export IDL_PATH=$GRISRED_DIR:$GRISRED_DIR/varlib:$IDL_PATH
 DASH='==================================================================='
 #create IDL startup file
-INI=$WDIR/grisini.pro
+INI=$GRISRED_DIR/grisini.pro
 echo "print,'$DASH'" >$INI
 echo "print,'GRIS data reduction routines'" >>$INI
 echo "print,'$DASH'" >>$INI

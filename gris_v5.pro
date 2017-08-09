@@ -66,6 +66,11 @@ endif else begin
    if(cntdir eq 0) then spawn,'mkdir ./level1'
 endelse
 
+;get git revision
+spawn,'pushd . &>/dev/null ; cd $GRISRED_DIR ; git show --summary ; popd &>/dev/null',gitrev
+
+
+
 if(cnt eq 0) then begin
    message,'No TIP maps found.'
    return
@@ -378,6 +383,16 @@ for jj=0,nmap_in-1 do begin
           
       get_lun,unit_out
       openw,unit_out,map_out+'cc'
+      
+                                ;add git revision 
+      igv=0
+      hdrstr=string(reform(byte(hdr[0]),80,2880/80))
+      for ii=0,n_elements(gitrev)-1 do if gitrev[ii] ne '' then begin
+        sxaddpar,hdrstr,'GITREV'+strcompress(/remove_all,string(igv)), $
+                 gitrev[ii],'grisred git revision',before='LC1-1'
+        igv=igv+1
+      endif
+      hdr[0]=strjoin(hdrstr[0:n_elements(hdrstr)-2])
 
       for j=0L,nrhdr-1 do begin
          header=hdr(j)
@@ -410,7 +425,8 @@ for jj=0,nmap_in-1 do begin
          endif
 
          hdr(j)=header
-      endfor
+       endfor
+      
       writeu,unit_out,byte(hdr)
 
       if(bitpix eq 8) then begin
