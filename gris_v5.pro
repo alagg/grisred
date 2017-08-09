@@ -67,7 +67,7 @@ endif else begin
 endelse
 
 ;get git revision
-spawn,'pushd . &>/dev/null ; cd $GRISRED_DIR ; git remote -v ; git rev-parse HEAD ; popd &>/dev/null',gitrev
+spawn,'pushd . &>/dev/null ; cd $GRISRED_DIR  ; git rev-parse HEAD ; git remote -v ; popd &>/dev/null',gitrev
 
 
 
@@ -389,8 +389,11 @@ for jj=0,nmap_in-1 do begin
                                 ;add git revision 
       igv=0
       hdrstr=string(reform(byte(hdr[0]),80,2880/80))
+      sxaddpar,hdrstr,'GITREV',gitrev[0],'grisred git revision',before='LC1-1'
+      sxaddpar,hdrstr,'GITREPO',(strsplit(gitrev[1],/extract))[1], $
+               'grisred git repository',before='LC1-1'
       for ii=0,n_elements(gitrev)-1 do if gitrev[ii] ne '' then begin
-        sxaddpar,hdrstr,'GITREV'+strcompress(/remove_all,string(igv)), $
+        sxaddpar,hdrstr,'GITREPO'+strcompress(/remove_all,string(igv)), $
                  gitrev[ii],'grisred git revision',before='LC1-1'
         igv=igv+1
       endif
