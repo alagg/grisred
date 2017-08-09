@@ -1,10 +1,11 @@
-function continuum,esp_in,ngrad,fts=fts,lambda=lambda,order=order,show=show
+function continuum,esp_in,ngrad,fts=fts,lambda=lambda, $
+                   order=order,show=show,fit=fit
 
   norm=mean(esp_in)
   esp=esp_in/norm
 
   if keyword_set(fts) then begin
-    cont=fit2fts(esp,show=show,lambda=lambda,order=order)
+    cont=fit2fts(esp,show=show,lambda=lambda,order=order,fit=fit)
   endif else begin
     imin=where(esp eq min(esp))
     imin=imin(0)

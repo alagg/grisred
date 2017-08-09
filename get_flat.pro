@@ -1,6 +1,6 @@
 pro get_flat,fileff,flat,data=data,time=time,corr1=dd1,corr2=dd2,$
              lambda=lambda,order=order,ffnorm=ffnorm,periodfr=periodfr, $
-             show=show,fts=fts
+             show=show,fts=fts,fit=fit
              
   
 if(keyword_set(data) eq 0) then data=0
@@ -80,7 +80,7 @@ for j=0,tam1[1]-1 do esp1[j]=median(sub1[j,*])
 for j=0,tam2[1]-1 do esp2[j]=median(sub2[j,*])
 
 esp=(esp1+esp2)/2.
-cont=continuum(esp,5,fts=fts,lambda=lambda,order=order,show=show)
+cont=continuum(esp,5,fts=fts,lambda=lambda,order=order,show=show,fit=fit)
 esp=esp*mean(cont)/cont
 ;;mcv
 ;fesp=abs(fft(esp-mean(esp)))

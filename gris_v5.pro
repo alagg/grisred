@@ -117,7 +117,8 @@ pendiente=0
 nff=n_elements(fileff)
 
 get_flat,pathin+fileff(0),ff1,data=data,time=timeff1,corr1=dd1,corr2=dd2,$
-   lambda=lambda,order=order,ffnorm=ffnorm1,periodfr=periodfr,show=show,fts=fts
+         lambda=lambda,order=order,ffnorm=ffnorm1,periodfr=periodfr,show=show, $
+         fts=fts,fit=ftsfit1
 
 i1=data(0)
 i2=data(1)
@@ -142,7 +143,8 @@ endif else if(nff eq 2 and fileff(0) eq fileff(1)) then begin
    ffnorm2=ffnorm1
 endif else begin   
   get_flat,pathin+fileff(1),ff2,data=data,time=timeff2,corr1=dd1,corr2=dd2,$
-           lambda=lambda,order=order,ffnorm=ffnorm2,show=show,fts=fts
+           lambda=lambda,order=order,ffnorm=ffnorm2,show=show,fts=fts, $
+           fit=ftsfit2
    ff2=ff2>0.1
    timeff2=mean(timeff2)
 endelse   
@@ -392,6 +394,27 @@ for jj=0,nmap_in-1 do begin
                  gitrev[ii],'grisred git revision',before='LC1-1'
         igv=igv+1
       endif
+                                ;add FTS fit parameters
+      sxaddpar,hdrstr,'FTSFLAT',keyword_set(fts),'flatfield calibration with FTS spectrum',before='LC1-1'
+      if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
+      if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
+      for ii=0,n_elements(ftsfit)-1 do begin
+        fs='FF'+strcompress(string(ii+1),/remove_all)
+        sxaddpar,hdrstr,fs+'WLOFF',ftsfit[ii].wloff,'WL-offset '+fs, $
+                 before='LC1-1'
+        sxaddpar,hdrstr,fs+'WLDSP',ftsfit[ii].wlbin,'WL-dispersion '+fs, $
+                 before='LC1-1'
+        sxaddpar,hdrstr,fs+'FWHMA',ftsfit[ii].fwhm_a,'spectral FWHM [A] '+fs, $
+                 before='LC1-1'
+        sxaddpar,hdrstr,fs+'FWHMP',ftsfit[ii].fwhm_pix, $
+                 'spectral FWHM [pix] '+fs,before='LC1-1'
+        sxaddpar,hdrstr,fs+'STRAY',ftsfit[ii].stray,'spectral straylight '+fs, $
+                 before='LC1-1'
+        sxaddpar,hdrstr,fs+'NPOLY',ftsfit[ii].npoly, $
+                 'order of fitted polynomial'+fs,before='LC1-1'
+        sxaddpar,hdrstr,fs+'FITNS',ftsfit[ii].fitness, $
+                 'fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
+      endfor
       hdr[0]=strjoin(hdrstr[0:n_elements(hdrstr)-2])
 
       for j=0L,nrhdr-1 do begin
