@@ -69,8 +69,12 @@ function mpfit_fts,par,xval=x,yval=y,errval=err,wgt=wgt,_extra=_extra, $
 ;interpolate fts to same grid as observation
   ftsip=interpol(fts[4,*],fts[1,*],wlobs)
   atmip=interpol(fts[3,*],fts[1,*],wlobs)
-  wgt=atmip ge 0.9
-
+  wgt=atmip ge 0.95
+                                ;remove first & last nb points from
+                                ;fitting (at
+;  nb=15
+;  wgt[0:nb-1]=0
+;  wgt[nwl-nb:*]=0
   
   ftsdeg=ftsip
   if np gt 2 then begin
@@ -295,9 +299,9 @@ function fit2fts,iprof,show=show,lambda=lambda,order=order,npoly=npoly, $
                                 ;(increases likelihood to find correct
                                 ;WL-offset and dispersion)  
     fitset.polyfit=1b
-    fitset.npoly=3
+    fitset.npoly=5
     fitset.niter=100             ;pikaia iterations
-    fitset.npop=200             ;pikaia populations
+    fitset.npop=256             ;pikaia populations
     par=pi.value
     pikcall,par,statpar,f,status
     pi.value=par
