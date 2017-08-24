@@ -49,7 +49,7 @@
 ;
 ; HISTORY
 ;
-;    Ver.1, 08-Aug-2017, Andreas Lagg
+;    Ver.1, 08-Aug-2017, Andreas Lagg, MPS
 ;-
 
 function mpfit_fts,par,xval=x,yval=y,errval=err,wgt=wgt,_extra=_extra, $
