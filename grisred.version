@@ -1,8 +1,8 @@
-fe98f7fe4c3f0e94436484ba4f8e1085e1999ed3
+6f27e25fc903f2df5072e21fed48227414dae6e7
 origin	git@gitlab.gwdg.de:andreas.lagg/grisred.git (fetch)
 origin	git@gitlab.gwdg.de:andreas.lagg/grisred.git (push)
-commit fe98f7fe4c3f0e94436484ba4f8e1085e1999ed3
+commit 6f27e25fc903f2df5072e21fed48227414dae6e7
 Author: Andreas Lagg <lagg@mps.mpg.de>
-Date:   Thu Aug 24 14:37:33 2017 +0200
+Date:   Thu Aug 24 16:36:14 2017 +0200
 
-    changed to environment variable FTSFILE. Removed GRISRED_DIR in IDL programs.
+    new version of redir_gregor. Additional header entries now with remove_blankline

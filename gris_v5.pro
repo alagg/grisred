@@ -395,6 +395,9 @@ for jj=0,nmap_in-1 do begin
       igv=0
       hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
 
+      sxaddpar,hdrstr,'DATERED',systime(0),'date of data reduction', $
+               before='LC1-1'
+      hdrstr=remove_blankline(hdrstr)
       sxaddpar,hdrstr,'GITREV',gitrev[0],'grisred git revision',before='LC1-1'
       hdrstr=remove_blankline(hdrstr)
       sxaddpar,hdrstr,'GITREPO',(strsplit(gitrev[1],/extract))[1], $
