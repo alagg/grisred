@@ -1,0 +1,11 @@
+commit 340ce15135445cdb1683584c6ae5f16f5ad19869
+Author: Andreas Lagg <lagg@mps.mpg.de>
+Date:   Thu Aug 24 11:28:59 2017 +0200
+
+    changed from gris_v5 -> gris_v6
+
+ create mode 100644 README_v6.txt
+ create mode 100644 gregormod_v6.pro
+ create mode 100644 gris_v6.pro
+ create mode 100644 parameter_mirrors_2016.pro
+ create mode 100644 parameter_mirrors_2017.pro

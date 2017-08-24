@@ -7,8 +7,7 @@ echo grisred directory: $GRISRED_DIR
 pushd . &>/dev/null
 cd $GRISRED_DIR
 echo "GIT summary:"
-git show --summary
-git show --summary > grisred.version
+cat grisred.version
 popd &>/dev/null
 
 [ -z $FTSDIR ] && { export FTSDIR=$GRISRED_DIR ;}
