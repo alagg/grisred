@@ -1,7 +1,1 @@
-commit 13301532565a8eb8199320fd51a4584e8f27d456
-Author: Andreas Lagg <lagg@mps.mpg.de>
-Date:   Thu Aug 24 11:44:15 2017 +0200
-
-    add git version during commit
-
- create mode 100644 grisred.version
+12823b0140fc840a9eb9000b3d94c68985c109aa

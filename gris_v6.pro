@@ -44,6 +44,15 @@ if(keyword_set(rotator_track) eq 1) then rotator_track=1 else rotator_track=0
 if(keyword_set(rotator_offset) eq 0) then rotator_offset=0
 ang_derot_az=ang_derot_az+rotator_offset
 
+;get git revision
+gitri=routine_info('gris_v6',/source)
+gitfi=file_info(file_dirname(gitri.path)+'/grisred.version')
+if gitfi.exists then begin
+  gitrev=strarr(2)
+  openr,unit,/get_lun,gitfi.name & readf,unit,gitrev & free_lun,unit
+endif else gitrev=['n/a','n/a n/a']
+print,'GIT-revision: ',gitrev
+
 ;use file_search (A. Lagg, May 05)
 files=file_search('./level0/'+map_in_base+'*',count=cnt)
 if (cnt eq 0) then begin
@@ -54,10 +63,6 @@ endif else begin
    pathin='./level0/'
    if(cntdir eq 0) then spawn,'mkdir ./level1'
 endelse
-
-;get git revision
-spawn,'pushd . &>/dev/null ; cd $GRISRED_DIR  ; git rev-parse HEAD ; git remote -v ; popd &>/dev/null',gitrev
-
 
 if(cnt eq 0) then begin
    message,'No TIP maps found.'
@@ -392,7 +397,7 @@ for jj=0,nmap_in-1 do begin
          datos=assoc(unit,bytarr(dd.naxis2,dd.naxis1),long(2880)*nrhdr)
       endif else if(dd.bitpix eq 16) then begin   
          datos=assoc(unit,intarr(dd.naxis2,dd.naxis1),long(2880)*nrhdr)
-      endif else if(dd.bitpix eq 32) then begin   
+      endif else if(dd.bitpix eq 32) then begin
          datos=assoc(unit,lonarr(dd.naxis2,dd.naxis1),long(2880)*nrhdr)
       endif
    endif else begin   
@@ -432,11 +437,7 @@ for jj=0,nmap_in-1 do begin
       sxaddpar,hdrstr,'GITREV',gitrev[0],'grisred git revision',before='LC1-1'
       sxaddpar,hdrstr,'GITREPO',(strsplit(gitrev[1],/extract))[1], $
                'grisred git repository',before='LC1-1'
-      ;; for ii=0,n_elements(gitrev)-1 do if gitrev[ii] ne '' then begin
-      ;;   sxaddpar,hdrstr,'GITREPO'+strcompress(/remove_all,string(igv)), $
-      ;;            gitrev[ii],'grisred git revision',before='LC1-1'
-      ;;   igv=igv+1
-      ;; endif
+
                                 ;add FTS fit parameters
       sxaddpar,hdrstr,'FTSFLAT',keyword_set(fts),'flatfield calibration with FTS spectrum',before='LC1-1'
       if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1

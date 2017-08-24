@@ -4,14 +4,10 @@ export GRISRED_DIR=`dirname $0`
 echo grisred directory: $GRISRED_DIR
 
 #show GIT information
-pushd . &>/dev/null
-cd $GRISRED_DIR
-echo "GIT summary:"
-cat grisred.version
-popd &>/dev/null
+cat $GRISRED_DIR/grisred.version
 
-[ -z $FTSDIR ] && { export FTSDIR=$GRISRED_DIR ;}
-echo "FTSDIR="$FTSDIR
+[ -z $FTSFILE ] && { export FTSFILE=$GRISRED_DIR/fts_combined.fits ;}
+echo "FTSFILE="$FTSFILE
 
 #IDL-setup
 if [ -z $IDL_PATH ] ;then
@@ -31,7 +27,7 @@ echo "print,'$DASH'" >$INI
 echo "print,'GRIS data reduction routines'" >>$INI
 echo "print,'$DASH'" >>$INI
 echo "print,'Usage: '">>$INI
-echo "print,'gris_v5, map, fileff, filecal, lambda=lambda, order=order [, /show]'">>$INI
+echo "print,'gris_v6, map, fileff, filecal, lambda=lambda, order=order [, /show]'">>$INI
 echo "print,'$DASH'" >>$INI
 #append an existing startup file
 echo "device,true_color=24,decomposed=0,retain=2" >>$INI

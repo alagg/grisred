@@ -250,9 +250,15 @@ function fit2fts,iprof,show=show,lambda=lambda,order=order,npoly=npoly, $
             niter:200,npop:512,npoly:npoly}
   
   if n_elements(fts) eq 0 then begin
-    ftsdir=getenv('FTSDIR')
-    if ftsdir eq '' then ftsdir='.'
-    fits=ftsdir+'/fts_combined.fits'
+    fits=getenv('FTSFILE')
+    fi=file_info(fits)
+    if fi.exists eq 0 then begin
+      print,'FTS spectrum not found. ' + $
+            'Please set the environment variable FTSFILE.'
+      print,'Example (bash): '
+      print,'export FTSFILE=$HOME/fts_combined.fits'
+      retall
+    endif
     print,'Reading FTS spectrum: ',fits
     ftsfull=readfits(fits,hdr)    
   endif
@@ -265,8 +271,8 @@ function fit2fts,iprof,show=show,lambda=lambda,order=order,npoly=npoly, $
   fts=ftsfull[*,infts]
   
   par=[wl,wlbin ,0.15,.15]
-  lim=[20.,0.002,.10,.10]  
-  prof=iprof/get_cont(iprof)    ;1.03;mean(histo_scale(iprof,perc=50))
+  lim=[20.,0.00075,.10,.10]
+  prof=iprof/get_cont(iprof)    ;mean(histo_scale(iprof,perc=50))
   
   
   
