@@ -393,10 +393,13 @@ for jj=0,nmap_in-1 do begin
       
                                 ;add git revision 
       igv=0
-      hdrstr=string(reform(byte(hdr[0]),80,2880/80))
+      hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
+
       sxaddpar,hdrstr,'GITREV',gitrev[0],'grisred git revision',before='LC1-1'
+      hdrstr=remove_blankline(hdrstr)
       sxaddpar,hdrstr,'GITREPO',(strsplit(gitrev[1],/extract))[1], $
                'grisred git repository',before='LC1-1'
+      hdrstr=remove_blankline(hdrstr)
 
                                 ;add FTS fit parameters
       sxaddpar,hdrstr,'FTSFLAT',keyword_set(fts),'flatfield calibration with FTS spectrum',before='LC1-1'
@@ -406,20 +409,27 @@ for jj=0,nmap_in-1 do begin
         fs='FF'+strcompress(string(ii+1),/remove_all)
         sxaddpar,hdrstr,fs+'WLOFF',ftsfit[ii].wloff,'WL-offset '+fs, $
                  before='LC1-1'
+        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'WLDSP',ftsfit[ii].wlbin,'WL-dispersion '+fs, $
                  before='LC1-1'
+        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'FWHMA',ftsfit[ii].fwhm_a,'spectral FWHM [A] '+fs, $
                  before='LC1-1'
+        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'FWHMP',ftsfit[ii].fwhm_pix, $
                  'spectral FWHM [pix] '+fs,before='LC1-1'
+        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'STRAY',ftsfit[ii].stray,'spectral straylight '+fs, $
                  before='LC1-1'
+        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'NPOLY',ftsfit[ii].npoly, $
                  'order of fitted polynomial '+fs,before='LC1-1'
+        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'FITNS',ftsfit[ii].fitness, $
                  'fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
+        hdrstr=remove_blankline(hdrstr)
       endfor
-      hdr[0]=strjoin(hdrstr[0:n_elements(hdrstr)-2])
+      for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
 
       for j=0L,nrhdr-1 do begin
          header=hdr(j)
