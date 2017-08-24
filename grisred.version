@@ -1,3 +1,8 @@
-b5d62e3af9a0132981031d6468e820f3b209aa91
+cda2f72660e490dc2f5ac66fdb528dfb02c39bbd
 origin	git@gitlab.gwdg.de:andreas.lagg/grisred.git (fetch)
 origin	git@gitlab.gwdg.de:andreas.lagg/grisred.git (push)
+commit cda2f72660e490dc2f5ac66fdb528dfb02c39bbd
+Author: Andreas Lagg <lagg@mps.mpg.de>
+Date:   Thu Aug 24 14:12:03 2017 +0200
+
+    changed to environment variable FTSFILE. Removed GRISRED_DIR in IDL programs.

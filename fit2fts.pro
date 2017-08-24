@@ -241,7 +241,7 @@ function fit2fts,iprof,show=show,lambda=lambda,order=order,npoly=npoly, $
   print,strjoin(replicate('=',80))
   print,'FTS-fitting, please wait...'
   if keyword_set(show) eq 0 then $
-    print,'   (use keyword gris_v5,...,/show to watch fitting procedure)'
+    print,'   (use keyword gris_v6,...,/show to watch fitting procedure)'
   
   
   if n_elements(npoly) eq 0 then npoly=29
