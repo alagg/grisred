@@ -1,8 +1,8 @@
-a7da2ddb302e8a102c4ef58ef40ec25ef2bfa8ad
+b8e93be558876ab7dcf6f9d4069ed38fe6dee2e6
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit a7da2ddb302e8a102c4ef58ef40ec25ef2bfa8ad
+commit b8e93be558876ab7dcf6f9d4069ed38fe6dee2e6
 Author: Andreas Lagg <lagg@mps.mpg.de>
-Date:   Sat Aug 26 15:03:23 2017 +0200
+Date:   Sat Aug 26 15:23:31 2017 +0200
 
-    added grating_angle.pro; some minor changes by Manolo
+    changed pre-commit
