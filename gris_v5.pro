@@ -34,8 +34,7 @@ if n_elements(fts) eq 0 then begin
   fts=1
 endif
 if(keyword_set(order) eq 0) and fts then begin
-   print,'keyword order is required for FTS continuum fitting.'
-   return
+   order=grating_angle(lambda)
 endif
 if(keyword_set(xtau) eq 0) then begin
    xtau=[x4,tau4,x567,tau567,x8910,tau8910]
@@ -56,7 +55,7 @@ if(keyword_set(maxshift) eq 0) then maxshift=5
 if(keyword_set(checksync) eq 0) then checksync=0
 
 ;get git revision
-gitri=routine_info('gris_v6',/source)
+gitri=routine_info('gris_v5',/source)
 gitfi=file_info(file_dirname(gitri.path)+'/grisred.version')
 if gitfi.exists then begin
   gitrev=strarr(2)

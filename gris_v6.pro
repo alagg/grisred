@@ -30,8 +30,7 @@ if n_elements(fts) eq 0 then begin
   fts=1
 endif
 if(keyword_set(order) eq 0) and fts then begin
-   print,'keyword order is required for FTS continuum fitting.'
-   return
+   order=grating_angle(lambda)
 endif
 if(keyword_set(denoise_fft) eq 0) then denoise_fft=0
 if(keyword_set(pzero) eq 0) then pzero=41.8	;53.6

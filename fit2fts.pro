@@ -153,6 +153,7 @@ function fts_chi,par,show=show,store=store
       xyouts,0,0,/normal,'dotted = previous FTS fit'
     endif
   endif
+  !p.multi=0
   return,chisqr
 end
 
