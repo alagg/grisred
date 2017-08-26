@@ -1,8 +1,8 @@
-6f27e25fc903f2df5072e21fed48227414dae6e7
-origin	git@gitlab.gwdg.de:andreas.lagg/grisred.git (fetch)
-origin	git@gitlab.gwdg.de:andreas.lagg/grisred.git (push)
-commit 6f27e25fc903f2df5072e21fed48227414dae6e7
+a7da2ddb302e8a102c4ef58ef40ec25ef2bfa8ad
+origin	https://github.com/alagg/grisred.git (fetch)
+origin	https://github.com/alagg/grisred.git (push)
+commit a7da2ddb302e8a102c4ef58ef40ec25ef2bfa8ad
 Author: Andreas Lagg <lagg@mps.mpg.de>
-Date:   Thu Aug 24 16:36:14 2017 +0200
+Date:   Sat Aug 26 15:03:23 2017 +0200
 
-    new version of redir_gregor. Additional header entries now with remove_blankline
+    added grating_angle.pro; some minor changes by Manolo
