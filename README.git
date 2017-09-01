@@ -1,0 +1,29 @@
+#HOW TO USE GIT IN THIS REPO
+#===========================
+
+#To start working with the project type:Then switch to the develoment branch:
+
+git clone https://github.com/alagg/grisred.git
+
+#Working should be done in the development branch. To switch to this branch type:
+git checkout development
+
+#Everything now do affects only the development branch. You can check in which branch you are in by typing:
+git branch
+#(the * should now be at development)
+
+#Pull the repository to make sure you work with the most recent version:
+git pull
+
+#To upload changes do the following:
+git commit -a -m "DESCRIBE WHAT YOU DID"
+git push -u origin development
+
+#Once you think that the development branch should become the official version you type:
+
+git pull            #make sure you are up to date
+git checkout master #switch back to master branch
+git branch          #check that you are now in the master branch
+git merge development
+   #should merge the development branch with the master one
+git push            #as usual. Push to make everything consistent
