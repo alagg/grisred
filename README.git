@@ -8,6 +8,8 @@ git clone https://github.com/alagg/grisred.git
 #Working should be done in the development branch. To switch to this branch type:
 git checkout development
 
+#It may be that the command complains about the "grisred.version" file, which was changed during the commit process automatically. The easiest solution is to simply delete it, it will be automatically recreated during the nexrt commit.
+
 #Everything now do affects only the development branch. You can check in which branch you are in by typing:
 git branch
 #(the * should now be at development)

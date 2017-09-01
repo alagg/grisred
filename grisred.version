@@ -1,8 +1,8 @@
-79916e617ac2fe2e20fa6fca419a444f66b2b065
+1d77cdd52399b6297887e1a7cd7adaf2a481aa92
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 79916e617ac2fe2e20fa6fca419a444f66b2b065
-Author: Andreas Lagg <lagg@mps.mpg.de>
-Date:   Sat Aug 26 15:34:05 2017 +0200
+commit 1d77cdd52399b6297887e1a7cd7adaf2a481aa92
+Author: lagg <lagg@lagg-tmm6-9.local>
+Date:   Fri Sep 1 13:18:14 2017 +0200
 
-    changed pre-commit
+    added development branch. Added README.git
