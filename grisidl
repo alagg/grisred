@@ -1,6 +1,7 @@
 #!/bin/bash
 
-export GRISRED_DIR=`dirname $0`
+#export GRISRED_DIR=`dirname $0`
+export GRISRED_DIR=`pwd`
 echo grisred directory: $GRISRED_DIR
 
 #show GIT information
