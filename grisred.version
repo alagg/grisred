@@ -1,8 +1,8 @@
-8280a92b28c3159c2c6404e292d2ec007edaf77c
+7844ec59cdf81faddb193520eb2c177cce0656a0
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 8280a92b28c3159c2c6404e292d2ec007edaf77c
+commit 7844ec59cdf81faddb193520eb2c177cce0656a0
 Author: Andreas Lagg <lagg@mps.mpg.de>
-Date:   Fri Sep 1 13:23:45 2017 +0200
+Date:   Wed Dec 6 14:07:26 2017 +0100
 
-    updated README.git
+    changed idl startup script

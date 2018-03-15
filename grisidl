@@ -4,6 +4,11 @@
 export GRISRED_DIR=`pwd`
 echo grisred directory: $GRISRED_DIR
 
+if [ -z $SSWDIR ] ;then
+    echo "Please set SSWDIR to your solar software installation directory."
+    exit
+fi
+
 #show GIT information
 cat $GRISRED_DIR/grisred.version
 
@@ -20,7 +25,7 @@ if [ -z $IDL_PATH ] ;then
     fi
 fi
     
-export IDL_PATH=$GRISRED_DIR:$GRISRED_DIR/varlib:$IDL_PATH
+export IDL_PATH=$GRISRED_DIR:$GRISRED_DIR/varlib:+$SSWDIR/gen:$IDL_PATH
 DASH='==================================================================='
 #create IDL startup file
 INI=$GRISRED_DIR/grisini.pro

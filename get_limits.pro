@@ -7,8 +7,9 @@ tam=size(im)
 
 perf=total(median(im(tam(1)/2-50:tam(1)/2+49,*),3),1)
 perf(0:10)=0.
+perf(tam(2)-10:*)=0. ;edge effect (A. Lagg, Feb 2018)
 ;perf=median(perf,3)
-perf=smooth(perf,9)
+perf=smooth(perf,9,/edge_truncate) ;to avoid nasty edge effects in smoothing
 perf(0)=perf(1)
 perf(tam(2)-2)=perf(tam(2)-1)
 dperf=deriv(perf)
