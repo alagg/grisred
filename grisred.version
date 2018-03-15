@@ -1,8 +1,8 @@
-7844ec59cdf81faddb193520eb2c177cce0656a0
+2f715d5a02bd89507c128c1da9a558883541db64
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 7844ec59cdf81faddb193520eb2c177cce0656a0
-Author: Andreas Lagg <lagg@mps.mpg.de>
-Date:   Wed Dec 6 14:07:26 2017 +0100
+commit 2f715d5a02bd89507c128c1da9a558883541db64
+Author: Andreas Lagg <lagg@lagg-smd8.pc.linmpi.mpg.de>
+Date:   Thu Mar 15 08:04:55 2018 +0100
 
-    changed idl startup script
+    added gris_cc2fits4d.pro to create 4D-fits files from the cc-files.

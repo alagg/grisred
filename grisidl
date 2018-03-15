@@ -5,10 +5,15 @@ export GRISRED_DIR=`pwd`
 echo grisred directory: $GRISRED_DIR
 
 if [ -z $SSWDIR ] ;then
-    echo "Please set SSWDIR to your solar software installation directory."
-    exit
+    #try some default locations
+    ssw=("/opt/solarsoft/ssw" "/usr/local/solarsoft/ssw" "$HOME/ssw" "$HOME/idl/ssw")
+    for SSWDIR in ${ssw[*]} ;do
+        [ -d $SSWDIR ] && { nossw=0 ; break ; } || { nossw=1 ;}
+    done
+    [ $nossw == 1 ] && { echo "Please set SSWDIR to your solar software installation directory." ; exit ;}
 fi
-
+    echo "SSWDIR="$SSWDIR
+exit
 #show GIT information
 cat $GRISRED_DIR/grisred.version
 
