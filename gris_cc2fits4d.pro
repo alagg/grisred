@@ -1,17 +1,19 @@
 pro gris_cc2fits4d,ccmask,outdir=outdir
 
-  ccfiles=file_search(ccmask,count=cnt)
+  if n_params() eq 0 then help=1b else begin
+    ccfiles=file_search(ccmask,count=cnt)
 
-  help=0b
-  if cnt eq  0 then help=1b else begin
-    ccpos=strlen(ccfiles)-strpos(ccfiles,'cc',/reverse_search)
-    if total(ccpos)/2 ne cnt then help=1b
+    help=0b
+    if cnt eq 0 then help=1b else begin
+      ccpos=strlen(ccfiles)-strpos(ccfiles,'cc',/reverse_search)
+      if total(ccpos)/2 ne cnt then help=1b
+    endelse
   endelse
 
   if help then begin
     print,'Creating 4D-Fits files from GRIS cc-files'
     print,'Usage: The argument must be a file mask to find all relevant cc-files, e.g.:'
-    print,'  gris_cc2fits4d,''level1/14jun17.001*cc'''
+    print,'  gris_cc2fits4d,''level1/14jun17.001*cc''[,outdir=''~/tmp/'']'
     print,'This will create 4D-file 14jun17.001.4d.fits'
     return
   endif

@@ -1,8 +1,8 @@
-6243de6c8baaac597c1e86361f6d97d8cb1a80a1
+e6829e442fb8884d4e8620f7ec7d342adcc48fc3
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 6243de6c8baaac597c1e86361f6d97d8cb1a80a1
+commit e6829e442fb8884d4e8620f7ec7d342adcc48fc3
 Author: Andreas Lagg <lagg@lagg-smd8.pc.linmpi.mpg.de>
-Date:   Thu Mar 15 08:18:27 2018 +0100
+Date:   Thu Mar 15 08:20:14 2018 +0100
 
     changed grisidl startup script to automatically search for SSW in some standard locations
