@@ -13,7 +13,7 @@ if [ -z $SSWDIR ] ;then
     [ $nossw == 1 ] && { echo "Please set SSWDIR to your solar software installation directory." ; exit ;}
 fi
     echo "SSWDIR="$SSWDIR
-exit
+
 #show GIT information
 cat $GRISRED_DIR/grisred.version
 
