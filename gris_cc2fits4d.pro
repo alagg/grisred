@@ -139,21 +139,31 @@ pro gris_cc2fits4d,ccmask,outdir=outdir
   writefits,fout,cube,hdr4d
 
                                 ;write wl-extension
-  mkhdr,headerwl,5,nwl,/image
-  sxaddpar,headerwl,'WLVEC','','wavelength vector'
-  sxaddpar,headerwl,'WLDISP',wldisp,'wavelength dispersion'
-  sxaddpar,headerwl,'WLOFF',wloff,'wavelength offset'
-  print,'WLDISP',wldisp,' / wavelength dispersion'
-  print,'WLOFF',wloff ,' / wavelength offset'
-  writefits,fout,wl_vec,headerwl,append=1
+  if n_elements(wl_vec) ne 0 then begin
+    mkhdr,headerwl,5,nwl,/image
+    sxaddpar,headerwl,'WLVEC','','wavelength vector'
+    sxaddpar,headerwl,'WLDISP',wldisp,'wavelength dispersion'
+    sxaddpar,headerwl,'WLOFF',wloff,'wavelength offset'
+    print,'WLDISP',wldisp,' / wavelength dispersion'
+    print,'WLOFF',wloff ,' / wavelength offset'
+    writefits,fout,wl_vec,headerwl,append=1
+  endif else begin
+    message,/cont,'No WL-info found. Please reduce the data using a newer' + $
+            ' version of grisred before creating the 4D fits file.'
+  endelse
 
                                 ;write continuum extension
-  mkhdr,headeric,4,[nx,ny],/image
-  sxaddpar,headeric,'ICONTIMG',icimg,'continuum image'
-  sxaddpar,headeric,'IC_HSRA',icont_hsra,'average QS continuum level'
-  print,'ICONTIMG',icimg,' / average continuum level'
-  print,'IC_HSRA',icont_hsra,' / average QS continuum level'
-  writefits,fout,icont,headeric,append=1
+  if n_elements(wl_vec) ne 0 then begin
+    mkhdr,headeric,4,[nx,ny],/image
+    sxaddpar,headeric,'ICONTIMG',icimg,'continuum image'
+    sxaddpar,headeric,'IC_HSRA',icont_hsra,'average QS continuum level'
+    print,'ICONTIMG',icimg,' / average continuum level'
+    print,'IC_HSRA',icont_hsra,' / average QS continuum level'
+    writefits,fout,icont,headeric,append=1
+  endif else begin
+    message,/cont,'No continuum image found. Please reduce the data using a newer' + $
+            ' version of grisred before creating the 4D fits file.'
+  endelse
 
   print,'Wrote 4D cube to '+fout
 
