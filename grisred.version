@@ -1,8 +1,8 @@
-e6829e442fb8884d4e8620f7ec7d342adcc48fc3
+b230da42780fa7c907e05f4131856bfe9b4975a1
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit e6829e442fb8884d4e8620f7ec7d342adcc48fc3
-Author: Andreas Lagg <lagg@lagg-smd8.pc.linmpi.mpg.de>
-Date:   Thu Mar 15 08:20:14 2018 +0100
+commit b230da42780fa7c907e05f4131856bfe9b4975a1
+Author: Andreas Lagg <lagg@mps.mpg.de>
+Date:   Tue Apr 24 11:56:38 2018 +0200
 
-    changed grisidl startup script to automatically search for SSW in some standard locations
+    gris_cc2fits4d.pro: Added warning message when no icont or wl-vec are in Fits header of level1 files
