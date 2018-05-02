@@ -434,17 +434,17 @@ for jj=0,nmap_in-1 do begin
       igv=0
       hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
 
-      sxaddpar,hdrstr,'DATERED',systime(0),'date of data reduction', $
+      sxaddpar,hdrstr,'DATERED',(STRJOIN(STRSPLIT(systime(0), /EXTRACT), ' ')),'date of data reduction', $
                before='LC1-1'
       hdrstr=remove_blankline(hdrstr)
-      sxaddpar,hdrstr,'GITREV',gitrev[0],'grisred git revision',before='LC1-1'
+      sxaddpar,hdrstr,'GITREV',string(gitrev[0],f='(A20)'),'grisred git revision',before='LC1-1'
       hdrstr=remove_blankline(hdrstr)
-      sxaddpar,hdrstr,'GITREPO',(strsplit(gitrev[1],/extract))[1], $
+      sxaddpar,hdrstr,'GITREPO',string(((strsplit(gitrev[1],/extract))[1],f='(A20)'), $
                'grisred git repository',before='LC1-1'
       hdrstr=remove_blankline(hdrstr)
 
                                 ;add FTS fit parameters
-      sxaddpar,hdrstr,'FTSFLAT',keyword_set(fts),'flatfield calibration with FTS spectrum',before='LC1-1'
+       sxaddpar,hdrstr,'FTSFLAT',string(keyword_set(fts),f='(A20)'),'fflatfield calibration with FTS spectrum',before='LC1-1'
       if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
       if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
       for ii=0,n_elements(ftsfit)-1 do begin
@@ -471,41 +471,43 @@ for jj=0,nmap_in-1 do begin
                  'fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
         hdrstr=remove_blankline(hdrstr)
       endfor
-      for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
-      
-      for j=0L,nrhdr-1 do begin
-         header=hdr(j)
 
-         pos=strpos(hdr(j),'BITPIX  =')
-         if(pos ne -1) then strput,header,string(format='(i20)',fix(bitpix)),pos+10
 
-         pos=strpos(header,'NAXIS1  =')
-         if(pos ne -1) then strput,header,string(format='(i20)',i2-i1+1),pos+10
+            for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
+            for j=0L,nrhdr-1 do begin
+               header=hdr(j)
 
-         pos=strpos(header,'NAXIS2  =')
-         if(pos ne -1) then strput,header,string(format='(i20)',j2-j1+1),pos+10
+               pos=strpos(hdr(j),'BITPIX  =')
+               if(pos ne -1) then strput,header,string(format='(i20)',fix(bitpix)),pos+10
 
-         pos=strpos(header,'NAXIS3  =')
-         if(pos ne -1) then strput,header,string(format='(i20)',4*fix(npos/step)),pos+10
+               pos=strpos(header,'NAXIS1  =')
+               if(pos ne -1) then strput,header,string(format='(i20)',i2-i1+1),pos+10
 
-         pos=strpos(hdr(j),'TELESCOP=')
-         if(dd.telescope eq 'SVST' and pos ne -1) then $
-            strput,header,string(format='(a8)','SVST_COR'),pos+11   
+               pos=strpos(header,'NAXIS2  =')
+               if(pos ne -1) then strput,header,string(format='(i20)',j2-j1+1),pos+10
 
-         pos=strpos(header,'WAVELENG=')
-         if(pos ne -1) then strput,header,string(format='(i20)',round(lambda/10.)),pos+10
-         
-         pos=strpos(hdr(j),'DATAVERS=')
-         if(pos ne -1) then begin
-            strput,header,string(format='(i20)',fix(1)),pos+10
-            tit='data version (I->Q,U,V crosstalk corrected)'
-            format_tit='(A'+strtrim(strlen(tit),2)+')'
-            strput,header,string(format=format_tit,tit),pos+33
-         endif
+               pos=strpos(header,'NAXIS3  =')
+               if(pos ne -1) then strput,header,string(format='(i20)',4*fix(npos/step)),pos+10
 
-         hdr(j)=header
-      endfor
-      writeu,unit_out,byte(hdr)
+               pos=strpos(hdr(j),'TELESCOP=')
+               if(dd.telescope eq 'SVST' and pos ne -1) then $
+                  strput,header,string(format='(a8)','SVST_COR'),pos+11
+
+               pos=strpos(header,'WAVELENG=')
+               if(pos ne -1) then strput,header,string(format='(i20)',round(lambda/10.)),pos+10
+
+               pos=strpos(hdr(j),'DATAVERS=')
+               if(pos ne -1) then begin
+                  strput,header,string(format='(i20)',fix(1)),pos+10
+                  tit='data version (I,Q,U,V crosstalk corrected)'
+                  format_tit='(A'+strtrim(strlen(tit),2)+')'
+                  strput,header,string(format=format_tit,tit),pos+33
+               endif
+
+               hdr(j)=header
+            endfor
+
+            writeu,unit_out,byte(hdr)
 
       if(bitpix eq 8) then begin
          dat_out=assoc(unit_out,bytarr(i2-i1+1,j2-j1+1),long(2880)*nrhdr)
@@ -517,7 +519,9 @@ for jj=0,nmap_in-1 do begin
    endif
 
    time=param_fits(hdr,'UT      =',delimiter=':',vartype=1) 
+   print,time
    time=time(*,0)+(time(*,1)+time(*,2)/60.)/60.
+   print,'-------------------------------->>>>',time
    istep=param_fits(hdr,'ISTEP   =',vartype=1)
    if(old eq 0) then begin
       date=param_fits(hdr,'DATE-OBS=',delimiter='-',vartype=1)

@@ -1,8 +1,8 @@
-e52dfa18b1249bf3f2bb2ff86eba4c3ab2da30cb
+e99500a04d927b9ca91da6844d63b866d914b256
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit e52dfa18b1249bf3f2bb2ff86eba4c3ab2da30cb
+commit e99500a04d927b9ca91da6844d63b866d914b256
 Author: lagg <lagg@lagg-tme8.speedport_w_724v_09011603_05_013>
-Date:   Fri Apr 27 15:49:58 2018 +0200
+Date:   Fri Apr 27 16:03:04 2018 +0200
 
-    removed readfits.pro
+    added new readfits.pro
