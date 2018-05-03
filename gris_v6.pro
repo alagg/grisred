@@ -426,87 +426,67 @@ for jj=0,nmap_in-1 do begin
 
       pos=strpos(map_out,'level0') 
       if(pos ne -1) then strput,map_out,string(format='(a6)',"level1"),pos 
-          
+
       get_lun,unit_out
       openw,unit_out,map_out+'cc'
 
                                 ;add git revision 
       igv=0
       hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
+      tim = BIN_DATE(systime(0))
+      tim = strtrim(tim[2],1)+'/'+strtrim(tim[1],1)+'/'+strtrim(tim[0],1)
+      sxaddpar,hdrstr,'DATERED',tim,$
+      ' date of data reduction', before='FILENAME'
+      tmp = gitrev[0]
+      ;sxaddpar,hdrstr,'GITREV',string(tmp,format='(A18)'),$
+       ;        ' grisred git revision',before='FILENAME'
+       ;gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
+       ;gitrev_tmp=strmid(gitrev_tmp,strpos(gitrev_tmp,'com')+3)    ; ''
+       ;gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp, /EXTRACT,'/'), ' ')
+       ;gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp,/regex, /EXTRACT,'.git'))
+       ;sxaddpar,hdrstr,'GITREPO',string(gitrev_tmp,format='(A18)'), $
+       ;         ' grisred git repository',before='FILENAME'
 
-      sxaddpar,hdrstr,'DATERED',(STRJOIN(STRSPLIT(systime(0), /EXTRACT), ' ')),'date of data reduction', $
-               before='LC1-1'
-      hdrstr=remove_blankline(hdrstr)
-      sxaddpar,hdrstr,'GITREV',string(gitrev[0],f='(A20)'),'grisred git revision',before='LC1-1'
-      hdrstr=remove_blankline(hdrstr)
-      sxaddpar,hdrstr,'GITREPO',string(((strsplit(gitrev[1],/extract))[1],f='(A20)'), $
-               'grisred git repository',before='LC1-1'
-      hdrstr=remove_blankline(hdrstr)
-
-                                ;add FTS fit parameters
-       sxaddpar,hdrstr,'FTSFLAT',string(keyword_set(fts),f='(A20)'),'fflatfield calibration with FTS spectrum',before='LC1-1'
+      ;add FTS fit parameters
+      if keyword_set(fts) then nfts=1 else nfts=0
+      sxaddpar,hdrstr,'FTSFLAT',nfts,$
+                ' flatfield calibration with FTS spectrum',before='LC1-1'
       if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
       if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
       for ii=0,n_elements(ftsfit)-1 do begin
         fs='FF'+strcompress(string(ii+1),/remove_all)
-        sxaddpar,hdrstr,fs+'WLOFF',ftsfit[ii].wloff,'WL-offset '+fs, $
+        sxaddpar,hdrstr,fs+'WLOFF',ftsfit[ii].wloff,' WL-offset '+fs, $
                  before='LC1-1'
         hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'WLDSP',ftsfit[ii].wlbin,'WL-dispersion '+fs, $
+        sxaddpar,hdrstr,fs+'WLDSP',ftsfit[ii].wlbin,' WL-dispersion '+fs, $
                  before='LC1-1'
         hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'FWHMA',ftsfit[ii].fwhm_a,'spectral FWHM [A] '+fs, $
+        sxaddpar,hdrstr,fs+'FWHMA',ftsfit[ii].fwhm_a,' spectral FWHM [A] '+fs, $
                  before='LC1-1'
         hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'FWHMP',ftsfit[ii].fwhm_pix, $
-                 'spectral FWHM [pix] '+fs,before='LC1-1'
+                 ' spectral FWHM [pix] '+fs,before='LC1-1'
         hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'STRAY',ftsfit[ii].stray,'spectral straylight '+fs, $
+        sxaddpar,hdrstr,fs+'STRAY',ftsfit[ii].stray,' spectral straylight '+fs, $
                  before='LC1-1'
         hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'NPOLY',ftsfit[ii].npoly, $
-                 'order of fitted polynomial '+fs,before='LC1-1'
+                 ' order of fitted polynomial '+fs,before='LC1-1'
         hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'FITNS',ftsfit[ii].fitness, $
-                 'fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
-        hdrstr=remove_blankline(hdrstr)
-      endfor
+                 ' fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
 
+      endfor
+      sxaddpar,hdrstr,'BITPIX',fix(bitpix)
+      sxaddpar,hdrstr,'NAXIS1',i2-i1+1
+      sxaddpar,hdrstr,'NAXIS2',j2-j1+1
+      sxaddpar,hdrstr,'NAXIS3',4*fix(npos/step)
+      if(dd.telescope eq 'SVST') then $
+      sxaddpar,hdrstr,'TELESCOP',string(format='(a8)','SVST_COR'),before='LC1-1'
+      sxaddpar,hdrstr,'WAVELENG',round(lambda/10.)
+      sxaddpar,hdrstr,'DATAVERS',fix(1),' data version (I,Q,U,V crosstalk corrected)'
 
             for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
-            for j=0L,nrhdr-1 do begin
-               header=hdr(j)
-
-               pos=strpos(hdr(j),'BITPIX  =')
-               if(pos ne -1) then strput,header,string(format='(i20)',fix(bitpix)),pos+10
-
-               pos=strpos(header,'NAXIS1  =')
-               if(pos ne -1) then strput,header,string(format='(i20)',i2-i1+1),pos+10
-
-               pos=strpos(header,'NAXIS2  =')
-               if(pos ne -1) then strput,header,string(format='(i20)',j2-j1+1),pos+10
-
-               pos=strpos(header,'NAXIS3  =')
-               if(pos ne -1) then strput,header,string(format='(i20)',4*fix(npos/step)),pos+10
-
-               pos=strpos(hdr(j),'TELESCOP=')
-               if(dd.telescope eq 'SVST' and pos ne -1) then $
-                  strput,header,string(format='(a8)','SVST_COR'),pos+11
-
-               pos=strpos(header,'WAVELENG=')
-               if(pos ne -1) then strput,header,string(format='(i20)',round(lambda/10.)),pos+10
-
-               pos=strpos(hdr(j),'DATAVERS=')
-               if(pos ne -1) then begin
-                  strput,header,string(format='(i20)',fix(1)),pos+10
-                  tit='data version (I,Q,U,V crosstalk corrected)'
-                  format_tit='(A'+strtrim(strlen(tit),2)+')'
-                  strput,header,string(format=format_tit,tit),pos+33
-               endif
-
-               hdr(j)=header
-            endfor
-
             writeu,unit_out,byte(hdr)
 
       if(bitpix eq 8) then begin
@@ -519,9 +499,7 @@ for jj=0,nmap_in-1 do begin
    endif
 
    time=param_fits(hdr,'UT      =',delimiter=':',vartype=1) 
-   print,time
    time=time(*,0)+(time(*,1)+time(*,2)/60.)/60.
-   print,'-------------------------------->>>>',time
    istep=param_fits(hdr,'ISTEP   =',vartype=1)
    if(old eq 0) then begin
       date=param_fits(hdr,'DATE-OBS=',delimiter='-',vartype=1)
@@ -532,7 +510,7 @@ for jj=0,nmap_in-1 do begin
       date=param_fits(hdr,'DATE    =',delimiter='/',vartype=1)
       date[2]=date[2]+1900
    endelse
-   
+
    format=['(i2,$)','(i3,$)','(i4,$)','(i5,$)','(i6,$)']
    print,npos
 
@@ -541,8 +519,8 @@ for jj=0,nmap_in-1 do begin
       print,i+1,format=format(fix(alog10(i+1)))
       for j=0,3 do begin
          im_a(j,*,*)=((rfits_im2(datos,dd,4*i+j+offset+1,desp=desp,/badpix)>0)-dc)	
-      endfor   
-      
+      endfor
+
       if(teles ne 0 and dd.telescope eq 'VTT') then begin
          mat_tel=vtt(n,k,date[2],date[1],date[0],time(i),theta,mast,lambda=lambda)
          mat_tel=invert(mat_tel)
