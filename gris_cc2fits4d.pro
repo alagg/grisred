@@ -1,4 +1,5 @@
-pro gris_cc2fits4d,ccmask,outdir=outdir
+pro gris_cc2fits4d,ccmask,outdir=outdir,$
+    noflip=noflip ; keyword to prevent flipping the 4d cube 
 
   if n_params() eq 0 then help=1b else begin
     ccfiles=file_search(ccmask,count=cnt)
@@ -50,11 +51,11 @@ pro gris_cc2fits4d,ccmask,outdir=outdir
   nwl=szcc[0]
   nstk=4
   mkhdr,hdr4d,4,[nwl,nstk,nx,ny],/extend
-  sxaddpar,hdr4d,'CTYPE1','NWL','number of wavelength points'
-  sxaddpar,hdr4d,'CTYPE2','NSTK','number of Stokes parameters'
-  sxaddpar,hdr4d,'CTYPE3','NX','number of scan positions (x-axis)'
-  sxaddpar,hdr4d,'CTYPE4','NY','number of pixels along the slit'
-  sxaddpar,hdr4d,'STOKES','IQUV','order of Stokes vector'
+  sxaddpar,hdr4d,'CTYPE1','NWL',' number of wavelength points'
+  sxaddpar,hdr4d,'CTYPE2','NSTK',' number of Stokes parameters'
+  sxaddpar,hdr4d,'CTYPE3','NX',' number of scan positions (x-axis)'
+  sxaddpar,hdr4d,'CTYPE4','NY',' number of pixels along the slit'
+  sxaddpar,hdr4d,'STOKES','IQUV',' order of Stokes vector'
   hdr4d=hdr4d[0:(where(strmid(hdr4d,0,3) eq 'END'))[0]-1]
 
   dat4d=fltarr(szcc[0],szcc[1],szcc[2])
@@ -135,15 +136,30 @@ pro gris_cc2fits4d,ccmask,outdir=outdir
   ixy=array_indices(medall,iqs[imin])
   icont_hsra=(median(icont,wd))[ixy[0],ixy[1]]
 
-                                ;write 4d cube
+  flipped = 0
+  if ~KEYWORD_SET(noflip) then begin
+    if sxpar(hdr4d,'STEPANGL') lt 90 then begin
+      ss = size(cube)
+      for ii=0,ss[1]-1 do begin
+        for jj=0,ss[2]-1 do begin
+          cube[ii,jj,*,*] = reverse(reform(cube[ii,jj,*,*]))
+        endfor
+      endfor
+      icont = reverse(icont)
+      flipped = 1
+    endif
+  endif
+  sxaddpar,hdr4d,'DATAFLIP',flipped,' data is flipped? yes:1, no:0'
+  sxaddpar,headeric,'DATAFLIP',flipped,' data is flipped? yes:1, no:0'
+  
+  ;write 4d cube
   writefits,fout,cube,hdr4d
-
                                 ;write wl-extension
   if n_elements(wl_vec) ne 0 then begin
     mkhdr,headerwl,5,nwl,/image
-    sxaddpar,headerwl,'WLVEC','','wavelength vector'
-    sxaddpar,headerwl,'WLDISP',wldisp,'wavelength dispersion'
-    sxaddpar,headerwl,'WLOFF',wloff,'wavelength offset'
+    sxaddpar,headerwl,'WLVEC','',' wavelength vector'
+    sxaddpar,headerwl,'WLDISP',wldisp,' wavelength dispersion'
+    sxaddpar,headerwl,'WLOFF',wloff, ' wavelength offset'
     print,'WLDISP',wldisp,' / wavelength dispersion'
     print,'WLOFF',wloff ,' / wavelength offset'
     writefits,fout,wl_vec,headerwl,append=1
@@ -155,8 +171,8 @@ pro gris_cc2fits4d,ccmask,outdir=outdir
                                 ;write continuum extension
   if n_elements(wl_vec) ne 0 then begin
     mkhdr,headeric,4,[nx,ny],/image
-    sxaddpar,headeric,'ICONTIMG',icimg,'continuum image'
-    sxaddpar,headeric,'IC_HSRA',icont_hsra,'average QS continuum level'
+    sxaddpar,headeric,'ICONTIMG',icimg,' continuum image'
+    sxaddpar,headeric,'IC_HSRA',icont_hsra,' average QS continuum level'
     print,'ICONTIMG',icimg,' / average continuum level'
     print,'IC_HSRA',icont_hsra,' / average QS continuum level'
     writefits,fout,icont,headeric,append=1
@@ -167,5 +183,4 @@ pro gris_cc2fits4d,ccmask,outdir=outdir
 
   print,'Wrote 4D cube to '+fout
 
-  stop
 end

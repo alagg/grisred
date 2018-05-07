@@ -432,20 +432,64 @@ for jj=0,nmap_in-1 do begin
 
                                 ;add git revision 
       igv=0
+      hdr2  = hdr
       hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
+
+; ; ; ; ; ; Test making sure that the header satisfies the 80 characters width
+;       hdrstr=string(hdrstr,format='(A80)')
+;       hdrstr=strtrim(hdrstr,1)
+
+; ; ; ; WORKED! Test making the systime shorter just keeping the importand info
       tim = BIN_DATE(systime(0))
-      tim = strtrim(tim[2],1)+'/'+strtrim(tim[1],1)+'/'+strtrim(tim[0],1)
-      sxaddpar,hdrstr,'DATERED',tim,$
-      ' date of data reduction', before='FILENAME'
-      tmp = gitrev[0]
-      ;sxaddpar,hdrstr,'GITREV',string(tmp,format='(A18)'),$
-       ;        ' grisred git revision',before='FILENAME'
-       ;gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
-       ;gitrev_tmp=strmid(gitrev_tmp,strpos(gitrev_tmp,'com')+3)    ; ''
-       ;gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp, /EXTRACT,'/'), ' ')
-       ;gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp,/regex, /EXTRACT,'.git'))
-       ;sxaddpar,hdrstr,'GITREPO',string(gitrev_tmp,format='(A18)'), $
-       ;         ' grisred git repository',before='FILENAME'
+      tim = string(tim[0],f='(I04)')+'-'+string(tim[1],f='(I02)')+$
+            '-'+string(tim[2],f='(I02)')
+      sxaddpar,hdrstr,'DATERED',string(tim),$
+      ' date of data reduction (yyyy-mm-dd)', before='FILENAME'
+
+; ; ; ; ; Test making sure that the query satisfies the width requirements and 
+; ; ; ; ; eliminating any posible character that my cause a problem
+;       gitrev_tmp=(strsplit(gitrev[1],/extract))[0] 
+;       sxaddpar,hdrstr,'GITREV',gitrev_tmp,$
+;                ' grisred git revision',before='FILENAME'
+;       gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
+;        gitrev_tmp=strmid(gitrev_tmp,strpos(gitrev_tmp,'com')+3)    ; ''
+;        gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp, /EXTRACT,'/'), ' ')
+;        gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp,/regex, /EXTRACT,'.git'))
+;        gitrev_tmp=string(gitrev_tmp,format='(A18)')
+;       sxaddpar,hdrstr,'GITREP',gitrev_tmp, $
+;                 ' grisred git repository',before='FILENAME'
+
+
+; ; ; ; ; ; Test trying to write the GIT query on the comment section 
+; ;       gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
+;       sxaddpar,hdrstr,'GITREP','git repository',' "'+gitrev_tmp+'"', before='FILENAME',Format='a18'
+;       gitrev_tmp=string(gitrev[0])
+;       sxaddpar,hdrstr,'GITREV','git revision',' "'+gitrev_tmp+'"',before='FILENAME',Format='a18'
+
+
+;;;; Test trying to add the git version as a comment
+gitrev_tmp=(strsplit(gitrev[0],/extract))[0]
+numb    = indgen(10)
+alphabet=string(bindgen(1,26)+(byte('a'))[0])
+strtmp = ''
+for j=0,strlen(gitrev_tmp)-1 do begin
+tmp  = strmid(gitrev_tmp,j,1)
+for i=0,n_elements(numb)-1 do begin
+mkstr=where(strmatch(tmp,strtrim(numb[i],1)) eq 1,nmk)
+if nmk gt 0 then strtmp +=strtrim(numb[i],1)
+endfor ; for i
+for i=0,n_elements(alphabet)-1 do begin
+mkstr=where(strmatch(tmp,strtrim(alphabet[i],1)) eq 1,nmk)
+if nmk gt 0 then strtmp +=strtrim(alphabet[i],1)
+endfor ; for i
+endfor ; for j
+
+gitrev_tmp = strtmp
+sxaddpar,hdrstr,'COMMENT ', 'grisred git revision'
+sxaddpar,hdrstr,'COMMENT ', string(gitrev_tmp,/PRINT)
+; gitrev_tmp=string((strsplit(gitrev[1],/extract))[1])
+; sxaddpar,hdrstr,'COMMENT ', 'grisred git repository'
+; sxaddpar,hdrstr,'COMMENT ', string(gitrev_tmp,/PRINT)
 
       ;add FTS fit parameters
       if keyword_set(fts) then nfts=1 else nfts=0
@@ -457,22 +501,16 @@ for jj=0,nmap_in-1 do begin
         fs='FF'+strcompress(string(ii+1),/remove_all)
         sxaddpar,hdrstr,fs+'WLOFF',ftsfit[ii].wloff,' WL-offset '+fs, $
                  before='LC1-1'
-        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'WLDSP',ftsfit[ii].wlbin,' WL-dispersion '+fs, $
                  before='LC1-1'
-        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'FWHMA',ftsfit[ii].fwhm_a,' spectral FWHM [A] '+fs, $
                  before='LC1-1'
-        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'FWHMP',ftsfit[ii].fwhm_pix, $
                  ' spectral FWHM [pix] '+fs,before='LC1-1'
-        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'STRAY',ftsfit[ii].stray,' spectral straylight '+fs, $
                  before='LC1-1'
-        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'NPOLY',ftsfit[ii].npoly, $
                  ' order of fitted polynomial '+fs,before='LC1-1'
-        hdrstr=remove_blankline(hdrstr)
         sxaddpar,hdrstr,fs+'FITNS',ftsfit[ii].fitness, $
                  ' fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
 
@@ -483,11 +521,16 @@ for jj=0,nmap_in-1 do begin
       sxaddpar,hdrstr,'NAXIS3',4*fix(npos/step)
       if(dd.telescope eq 'SVST') then $
       sxaddpar,hdrstr,'TELESCOP',string(format='(a8)','SVST_COR'),before='LC1-1'
-      sxaddpar,hdrstr,'WAVELENG',round(lambda/10.)
-      sxaddpar,hdrstr,'DATAVERS',fix(1),' data version (I,Q,U,V crosstalk corrected)'
+      sxaddpar,hdrstr,'WAVELENG',round(lambda/10.),before='LC1-1'
+      sxaddpar,hdrstr,'DATAVERS',fix(1),' data version (I,Q,U,V crosstalk corrected)',before='LC1-1'
 
-            for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
-            writeu,unit_out,byte(hdr)
+      for j=0,nrhdr-1 do hdr[j]=strtrim(strjoin(hdrstr[j*36:(j+1)*36-1]),1)
+      ;remove blank spaces
+      blank_str=string(bytarr(80)+32B)
+      zblank=where(hdr eq blank_str,nblank)
+      if nblank gt 0 then for j=0,nblank-1 do hdr=remove_blankline(hdr)
+      writeu,unit_out,byte(hdr)
+
 
       if(bitpix eq 8) then begin
          dat_out=assoc(unit_out,bytarr(i2-i1+1,j2-j1+1),long(2880)*nrhdr)
@@ -498,16 +541,17 @@ for jj=0,nmap_in-1 do begin
       endif
    endif
 
-   time=param_fits(hdr,'UT      =',delimiter=':',vartype=1) 
+
+   time=param_fits(hdr2,'UT      =',delimiter=':',vartype=1) 
    time=time(*,0)+(time(*,1)+time(*,2)/60.)/60.
-   istep=param_fits(hdr,'ISTEP   =',vartype=1)
+   istep=param_fits(hdr2,'ISTEP   =',vartype=1)
    if(old eq 0) then begin
-      date=param_fits(hdr,'DATE-OBS=',delimiter='-',vartype=1)
+      date=param_fits(hdr2,'DATE-OBS=',delimiter='-',vartype=1)
       dum=date[0]
       date[0]=date[2]
       date[2]=dum
    endif else begin
-      date=param_fits(hdr,'DATE    =',delimiter='/',vartype=1)
+      date=param_fits(hdr2,'DATE    =',delimiter='/',vartype=1)
       date[2]=date[2]+1900
    endelse
 
@@ -831,8 +875,10 @@ for jj=0,nmap_in-1 do begin
    close,unit
    totl=sqrt(totu*totu+totq*totq)
    totp=sqrt(totl*totl+totv*totv)
-   free_lun,unit
-   if(display eq 0) then free_lun,unit_out
+   if(display eq 0) then begin
+    free_lun,unit_out
+    close,unit_out
+   endif
    save,filename=map_out+'cm',toti,totq,totu,totv,totl,totp,hdr
    print,' '
    print,' '
@@ -840,4 +886,20 @@ for jj=0,nmap_in-1 do begin
 endfor
 
 return
+
+; ; ; ; Test trying to reading and then writing the fits file with the GIT characters
+
+; data = readfits(map_out+'cc',hdrstr,/sil)
+; gitrev_tmp=string(gitrev[0],format='(A18)')
+; sxaddpar,hdrstr,'GITREV',gitrev_tmp,$
+;         ' grisred git revision',before='FILENAME'
+; gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
+; gitrev_tmp=strmid(gitrev_tmp,strpos(gitrev_tmp,'com')+3)    ; ''
+; gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp, /EXTRACT,'/'), ' ')
+; gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp,/regex, /EXTRACT,'.git'))
+; gitrev_tmp=string(gitrev_tmp,format='(A18)')
+; sxaddpar,hdrstr,'GITREP',gitrev_tmp, $
+;          ' grisred git repository',before='FILENAME'
+; WRITEFITS, map_out+'cc', data, hdrstr;,append=1
+
 end
