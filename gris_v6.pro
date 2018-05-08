@@ -408,8 +408,6 @@ for jj=0,nmap_in-1 do begin
          datos=assoc(unit,lonarr(dd.naxis1,dd.naxis2),long(2880)*nrhdr)
       endif
    endelse 
-   print,'Datos assoc ->>>>>'
-   help,datos
 
    im_a=fltarr(4,tam(1),tam(2))
    im_b=fltarr(4,tam(1),tam(2))
@@ -431,88 +429,94 @@ for jj=0,nmap_in-1 do begin
 
       get_lun,unit_out
       openw,unit_out,map_out+'cc'
-                                ;add git revision 
-      igv=0
+      
+      
+      ; Header keywords added being sure that the format is always satisfied
+      ; this is need to solve the invalid character bug.
+      ; Sebastian Castellanos Duran - May 2018
+      nrhdr=n_elements(hdr)
       hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
-
       ;add FTS fit parameters
       if keyword_set(fts) then nfts=1 else nfts=0
-      sxaddpar,hdrstr,'FTSFLAT',strcompress(string(nfts,f='(A20)'),/remove_all),$
+      sxaddpar,hdrstr,'FTSFLAT',nfts,$
                 ' flatfield calibration with FTS spectrum',before='LC1-1'
       if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
       if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
       for ii=0,n_elements(ftsfit)-1 do begin
         fs='FF'+strcompress(string(ii+1),/remove_all)
-        sxaddpar,hdrstr,fs+'WLOFF',strcompress(string(ftsfit[ii].wloff,f='(A20)'),/remove_all),' WL-offset '+fs, $
-                 before='LC1-1'
+        sxaddpar,hdrstr,fs+'WLOFF',string(ftsfit[ii].wloff,$
+             f='(i20)'),' WL-offset '+fs,before='LC1-1'
                  hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'WLDSP',strcompress(string(ftsfit[ii].wlbin,f='(A20)'),/remove_all),' WL-dispersion '+fs, $
-                 before='LC1-1'
+        sxaddpar,hdrstr,fs+'WLDSP',string(ftsfit[ii].wlbin,$
+             f='(i20)'),' WL-dispersion '+fs, before='LC1-1'
                  hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'FWHMA',strcompress(string(ftsfit[ii].fwhm_a,f='(A20)'),/remove_all),' spectral FWHM [A] '+fs, $
-                 before='LC1-1'
+        sxaddpar,hdrstr,fs+'FWHMA',string(ftsfit[ii].fwhm_a,$
+             f='(i20)'),' spectral FWHM [A] '+fs, before='LC1-1'
                  hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'FWHMP',strcompress(string(ftsfit[ii].fwhm_pix,f='(A20)'),/remove_all), $
-                 ' spectral FWHM [pix] '+fs,before='LC1-1'
-        sxaddpar,hdrstr,fs+'STRAY',strcompress(string(ftsfit[ii].stray,f='(A20)'),/remove_all),' spectral straylight '+fs, $
-                 before='LC1-1'
+        sxaddpar,hdrstr,fs+'FWHMP',string(ftsfit[ii].fwhm_pix,$
+             f='(i20)'), ' spectral FWHM [pix] '+fs,before='LC1-1'
+        sxaddpar,hdrstr,fs+'STRAY',string(ftsfit[ii].stray,$
+             f='(i20)'),' spectral straylight '+fs, before='LC1-1'
                  hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'NPOLY',strcompress(string(ftsfit[ii].npoly,f='(A20)'),/remove_all), $
-                 ' order of fitted polynomial '+fs,before='LC1-1'
+        sxaddpar,hdrstr,fs+'NPOLY',string(ftsfit[ii].npoly,$
+             f='(i20)'), ' order of fitted polynomial '+fs,$
+             before='LC1-1'
                  hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'FITNS',strcompress(string(ftsfit[ii].fitness,f='(A20)'),/remove_all), $
-                 ' fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
+        sxaddpar,hdrstr,fs+'FITNS',string(ftsfit[ii].fitness,$
+             f='(i20)'),' fitness of PIKAIA fit to FTS '+fs,$
+             before='LC1-1'
                  hdrstr=remove_blankline(hdrstr)
 
       endfor
+      for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
+      sxaddpar,hdr,'BITPIX',fix(bitpix)
+      sxaddpar,hdr,'NAXIS1',i2-i1+1
+      sxaddpar,hdr,'NAXIS2',j2-j1+1
+      sxaddpar,hdr,'NAXIS3',4*fix(npos/step)
+      if(dd.telescope eq 'SVST') then $
+      sxaddpar,hdr,'TELESCOP',string(format='(a8)','SVST_COR'),before='LC1-1'
+      sxaddpar,hdr,'WAVELENG',round(lambda/10.),before='LC1-1'
+      sxaddpar,hdr,'DATAVERS',fix(1),$
+               ' data version (I,Q,U,V crosstalk corrected)',before='LC1-1'
 
-;       sxaddpar,hdrstr,'BITPIX',fix(bitpix)
-;       sxaddpar,hdrstr,'NAXIS1',i2-i1+1
-;       sxaddpar,hdrstr,'NAXIS2',j2-j1+1
-;       sxaddpar,hdrstr,'NAXIS3',4*fix(npos/step)
-;       if(dd.telescope eq 'SVST') then $
-;       sxaddpar,hdrstr,'TELESCOP',string(format='(a8)','SVST_COR'),before='LC1-1'
-;       sxaddpar,hdrstr,'WAVELENG',round(lambda/10.),before='LC1-1'
-;       sxaddpar,hdrstr,'DATAVERS',fix(1),' data version (I,Q,U,V crosstalk corrected)',before='LC1-1'
-;       for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
-;       writeu,unit_out,byte(hdr)
-
-
-            for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
-            for j=0L,nrhdr-1 do begin
-            header=hdr(j)
-            
-            pos=strpos(hdr(j),'BITPIX  =')
-            if(pos ne -1) then strput,header,string(format='(A20)',fix(bitpix)),pos+10
-            
-            pos=strpos(header,'NAXIS1  =')
-            if(pos ne -1) then strput,header,string(format='(A20)',i2-i1+1),pos+10
-            
-            pos=strpos(header,'NAXIS2  =')
-            if(pos ne -1) then strput,header,string(format='(A20)',j2-j1+1),pos+10
-            
-            pos=strpos(header,'NAXIS3  =')
-            if(pos ne -1) then strput,header,string(format='(A20)',4*fix(npos/step)),pos+10
-            
-            pos=strpos(hdr(j),'TELESCOP=')
-            if(dd.telescope eq 'SVST' and pos ne -1) then $
-            strput,header,string(format='(a8)','SVST_COR'),pos+11
-            
-            pos=strpos(header,'WAVELENG=')
-            if(pos ne -1) then strput,header,string(format='(A20)',round(lambda/10.)),pos+10
-            
-            pos=strpos(hdr(j),'DATAVERS=')
-            if(pos ne -1) then begin
-            strput,header,string(format='(A20)',fix(1)),pos+10
-            tit='data version (I,Q,U,V crosstalk corrected)'
-            format_tit='(A'+strtrim(strlen(tit),2)+')'
-            strput,header,string(format=format_tit,tit),pos+33
-            endif
-            
-            hdr(j)=header
-            endfor
-            
-            writeu,unit_out,byte(hdr)
+ 
+; for j=0L,nrhdr-1 do begin
+; header=hdr(j)
+; 
+;          pos=strpos(hdr(j),'BITPIX  =')
+;          if(pos ne -1) then strput,header,string(format='(i20)',fix(bitpix)),pos+10
+;          
+;          pos=strpos(header,'NAXIS1  =')
+;          if(pos ne -1) then strput,header,string(format='(i20)',i2-i1+1),pos+10
+;          
+;          pos=strpos(header,'NAXIS2  =')
+;          if(pos ne -1) then strput,header,string(format='(i20)',j2-j1+1),pos+10
+;          
+;          pos=strpos(header,'NAXIS3  =')
+;          if(pos ne -1) then strput,header,string(format='(i20)',4*fix(npos/step)),pos+10
+;          
+;          pos=strpos(hdr(j),'TELESCOP=')
+;          if(dd.telescope eq 'SVST' and pos ne -1) then $
+;          strput,header,string(format='(a8)','SVST_COR'),pos+11   
+;          
+;          pos=strpos(header,'WAVELENG=')
+;          if(pos ne -1) then strput,header,string(format='(i20)',round(lambda/10.)),pos+10
+;          
+;          pos=strpos(hdr(j),'DATAVERS=')
+;          if(pos ne -1) then begin
+;          strput,header,string(format='(i20)',fix(1)),pos+10
+;          tit='data version (I->Q,U,V crosstalk corrected)'
+;          format_tit='(A'+strtrim(strlen(tit),2)+')'
+;          strput,header,string(format=format_tit,tit),pos+33
+;          endif
+;          
+;          hdr(j)=header
+;          endfor
+      
+      blank_str=string(bytarr(80)+32B)
+      zblank=where(hdr eq blank_str,nblank)
+      for j=0,nblank-1 do hdr=remove_blankline(hdr)
+      writeu,unit_out,byte(hdr)
 
       if(bitpix eq 8) then begin
          dat_out=assoc(unit_out,bytarr(i2-i1+1,j2-j1+1),long(2880)*nrhdr)
@@ -521,8 +525,6 @@ for jj=0,nmap_in-1 do begin
       endif else if(bitpix eq 32) then begin   
          dat_out=assoc(unit_out,lonarr(i2-i1+1,j2-j1+1),long(2880)*nrhdr)
       endif
-      print,'---->'
-      help,dat_out
       
    endif
 
@@ -827,8 +829,6 @@ for jj=0,nmap_in-1 do begin
 
          tvwinp,compress([reform(5*im2[1,*,*]),5*reform(im2[2,*,*]),reform(im2[3,*,*])],2)
       endif  else begin
-      print,'before end 1'
-      help,dat_out
          if(!version.arch eq "alpha" or strmid(!version.arch,0,3) eq "x86") then begin   
             if(bitpix eq 8) then begin
                for j=0,3 do dat_out(4*i+j) = byte(im2(j,*,*)/factor)
@@ -855,8 +855,6 @@ for jj=0,nmap_in-1 do begin
             endif
          endelse
       endelse      
-      print,'before end 2'
-      help,dat_out
    endfor
    
    free_lun,unit
@@ -873,33 +871,11 @@ for jj=0,nmap_in-1 do begin
 
 endfor
 
-; 
-; print,'aaaaaaaaaaaaaaaaaaa-------------->>>>>>>>>'
-; patch_hdr_v6,map_out
-; print,'aaaaaaaaaaaaaaaaaaa--------------<<<<<<<<<<<<<<<<<<<<'
-; ; 
-
-; hdrstr = ''
-; ; ; ; WORKED! Test making the systime shorter just keeping the importand info
-; ; tim = BIN_DATE(systime(0))
-; ; tim = string(tim[0],f='(I04)')+'-'+string(tim[1],f='(I02)')+$
-; ; '-'+string(tim[2],f='(I02)')
-; ; sxaddpar,hdrstr,'DATERED',string(tim),$
-; ; ' date of data reduction (yyyy-mm-dd)', before='FILENAME'
-; data = readfits(map_out+'cc',hdrstr)
-; gitrev_tmp=string(gitrev[0])
-
-; sxaddpar,hdrstr,'GITREV',gitrev_tmp,$
-; ' grisred git revision',before='FILENAME'
-; gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
-; sxaddpar,hdrstr,'GITREP',gitrev_tmp, $
-; ' grisred git repository',before='FILENAME'
-;remove blank spaces
-; ; blank_str=string(bytarr(80)+32B)
-; ; zblank=where(hdrstr eq blank_str,nblank)
-; ; if nblank gt 0 then for j=0,nblank-1 do hdrstr=remove_blankline(hdrstr)
-; WRITEFITS, map_out+'cc', data, hdrstr
-
+; add git revision to the header
+; path added to temporary solve the header character bug. 
+; It just added the new keywords and the "END" on the header.
+; Sebastian Castellanos Duran - May 2018
+patch_hdr_v6,map_out
 
 return
 

@@ -136,9 +136,12 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,$
   ixy=array_indices(medall,iqs[imin])
   icont_hsra=(median(icont,wd))[ixy[0],ixy[1]]
 
+  ; added flip keyword in order to have the maps with the same orientation as 
+  ; SDO - Sebastian Castellanos Duran - May 2018
   flipped = 0
   if ~KEYWORD_SET(noflip) then begin
     if sxpar(hdr4d,'STEPANGL') lt 90 then begin
+      print,'Flipping data'
       ss = size(cube)
       for ii=0,ss[1]-1 do begin
         for jj=0,ss[2]-1 do begin

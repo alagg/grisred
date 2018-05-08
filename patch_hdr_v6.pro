@@ -1,10 +1,10 @@
+;;
+;; Routine to add the GIT revision keywords to the header, eliminate unnecessary 
+;; whitespaces, and the add at the end of the header "END" (standard)
+;;
+;; V1. May 2018 - Sebastian Castellanos Duran
+
 pro patch_hdr_v6,map_out
-
-
-
-print,'--------------------------------------->>>>>>>>>>>>'
-
-
 ;get git revision
 gitri=routine_info('gris_v6',/source)
 gitfi=file_info(file_dirname(gitri.path)+'/grisred.version')
@@ -37,9 +37,4 @@ if nblank gt 0 then for j=0,nblank-1 do hdrstr=remove_blankline(hdrstr)
 
 
 WRITEFITS, map_out+'cc', data, hdrstr
-
-
-
-print,'<<<<<<<<<<<---------------------------------------'
-
 end
