@@ -12,10 +12,8 @@ nrhdr=n_elements(hdr)
 ;get git revision
 gitri=routine_info('gris_v6',/source)
 gitfi=file_info(file_dirname(gitri.path)+'/grisred.version')
-if gitfi.exists then begin
   gitrev=strarr(2)
   openr,unit,/get_lun,gitfi.name & readf,unit,gitrev & free_lun,unit
-endif else gitrev=['n/a','n/a n/a']
 print,'GIT-revision: ',gitrev
 
                                 ;add git revision 

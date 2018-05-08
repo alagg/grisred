@@ -431,87 +431,42 @@ for jj=0,nmap_in-1 do begin
       openw,unit_out,map_out+'cc'
       
       
-      ; Header keywords added being sure that the format is always satisfied
-      ; this is need to solve the invalid character bug.
+      ; Header new keywords added at the end of the code in order to 
+      ; solve the invalid character bug.
       ; Sebastian Castellanos Duran - May 2018
-      nrhdr=n_elements(hdr)
-      hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
-      ;add FTS fit parameters
-      if keyword_set(fts) then nfts=1 else nfts=0
-      sxaddpar,hdrstr,'FTSFLAT',nfts,$
-                ' flatfield calibration with FTS spectrum',before='LC1-1'
-      if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
-      if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
-      for ii=0,n_elements(ftsfit)-1 do begin
-        fs='FF'+strcompress(string(ii+1),/remove_all)
-        sxaddpar,hdrstr,fs+'WLOFF',string(ftsfit[ii].wloff,$
-             f='(i20)'),' WL-offset '+fs,before='LC1-1'
-                 hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'WLDSP',string(ftsfit[ii].wlbin,$
-             f='(i20)'),' WL-dispersion '+fs, before='LC1-1'
-                 hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'FWHMA',string(ftsfit[ii].fwhm_a,$
-             f='(i20)'),' spectral FWHM [A] '+fs, before='LC1-1'
-                 hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'FWHMP',string(ftsfit[ii].fwhm_pix,$
-             f='(i20)'), ' spectral FWHM [pix] '+fs,before='LC1-1'
-        sxaddpar,hdrstr,fs+'STRAY',string(ftsfit[ii].stray,$
-             f='(i20)'),' spectral straylight '+fs, before='LC1-1'
-                 hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'NPOLY',string(ftsfit[ii].npoly,$
-             f='(i20)'), ' order of fitted polynomial '+fs,$
-             before='LC1-1'
-                 hdrstr=remove_blankline(hdrstr)
-        sxaddpar,hdrstr,fs+'FITNS',string(ftsfit[ii].fitness,$
-             f='(i20)'),' fitness of PIKAIA fit to FTS '+fs,$
-             before='LC1-1'
-                 hdrstr=remove_blankline(hdrstr)
-
-      endfor
-      for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
-      sxaddpar,hdr,'BITPIX',fix(bitpix)
-      sxaddpar,hdr,'NAXIS1',i2-i1+1
-      sxaddpar,hdr,'NAXIS2',j2-j1+1
-      sxaddpar,hdr,'NAXIS3',4*fix(npos/step)
-      if(dd.telescope eq 'SVST') then $
-      sxaddpar,hdr,'TELESCOP',string(format='(a8)','SVST_COR'),before='LC1-1'
-      sxaddpar,hdr,'WAVELENG',round(lambda/10.),before='LC1-1'
-      sxaddpar,hdr,'DATAVERS',fix(1),$
-               ' data version (I,Q,U,V crosstalk corrected)',before='LC1-1'
-
  
-; for j=0L,nrhdr-1 do begin
-; header=hdr(j)
-; 
-;          pos=strpos(hdr(j),'BITPIX  =')
-;          if(pos ne -1) then strput,header,string(format='(i20)',fix(bitpix)),pos+10
-;          
-;          pos=strpos(header,'NAXIS1  =')
-;          if(pos ne -1) then strput,header,string(format='(i20)',i2-i1+1),pos+10
-;          
-;          pos=strpos(header,'NAXIS2  =')
-;          if(pos ne -1) then strput,header,string(format='(i20)',j2-j1+1),pos+10
-;          
-;          pos=strpos(header,'NAXIS3  =')
-;          if(pos ne -1) then strput,header,string(format='(i20)',4*fix(npos/step)),pos+10
-;          
-;          pos=strpos(hdr(j),'TELESCOP=')
-;          if(dd.telescope eq 'SVST' and pos ne -1) then $
-;          strput,header,string(format='(a8)','SVST_COR'),pos+11   
-;          
-;          pos=strpos(header,'WAVELENG=')
-;          if(pos ne -1) then strput,header,string(format='(i20)',round(lambda/10.)),pos+10
-;          
-;          pos=strpos(hdr(j),'DATAVERS=')
-;          if(pos ne -1) then begin
-;          strput,header,string(format='(i20)',fix(1)),pos+10
-;          tit='data version (I->Q,U,V crosstalk corrected)'
-;          format_tit='(A'+strtrim(strlen(tit),2)+')'
-;          strput,header,string(format=format_tit,tit),pos+33
-;          endif
-;          
-;          hdr(j)=header
-;          endfor
+        for j=0L,nrhdr-1 do begin
+          header=hdr(j)
+
+         pos=strpos(hdr(j),'BITPIX  =')
+         if(pos ne -1) then strput,header,string(format='(i20)',fix(bitpix)),pos+10
+         
+         pos=strpos(header,'NAXIS1  =')
+         if(pos ne -1) then strput,header,string(format='(i20)',i2-i1+1),pos+10
+         
+         pos=strpos(header,'NAXIS2  =')
+         if(pos ne -1) then strput,header,string(format='(i20)',j2-j1+1),pos+10
+         
+         pos=strpos(header,'NAXIS3  =')
+         if(pos ne -1) then strput,header,string(format='(i20)',4*fix(npos/step)),pos+10
+         
+         pos=strpos(hdr(j),'TELESCOP=')
+         if(dd.telescope eq 'SVST' and pos ne -1) then $
+         strput,header,string(format='(a8)','SVST_COR'),pos+11   
+         
+         pos=strpos(header,'WAVELENG=')
+         if(pos ne -1) then strput,header,string(format='(i20)',round(lambda/10.)),pos+10
+         
+         pos=strpos(hdr(j),'DATAVERS=')
+         if(pos ne -1) then begin
+         strput,header,string(format='(i20)',fix(1)),pos+10
+         tit='data version (I->Q,U,V crosstalk corrected)'
+         format_tit='(A'+strtrim(strlen(tit),2)+')'
+         strput,header,string(format=format_tit,tit),pos+33
+         endif
+         
+         hdr(j)=header
+         endfor
       
       blank_str=string(bytarr(80)+32B)
       zblank=where(hdr eq blank_str,nblank)
@@ -861,10 +816,8 @@ for jj=0,nmap_in-1 do begin
    close,unit
    totl=sqrt(totu*totu+totq*totq)
    totp=sqrt(totl*totl+totv*totv)
-   if(display eq 0) then begin
-    free_lun,unit_out
-    close,unit_out
-   endif
+   free_lun,unit
+   if(display eq 0) then free_lun,unit_out
    save,filename=map_out+'cm',toti,totq,totu,totv,totl,totp,hdr
    print,' '
    print,' '
@@ -875,7 +828,61 @@ endfor
 ; path added to temporary solve the header character bug. 
 ; It just added the new keywords and the "END" on the header.
 ; Sebastian Castellanos Duran - May 2018
-patch_hdr_v6,map_out
+
+
+keyw ='DATEREDU'
+keyv = systime(0)
+keyc = ' date of data reduction (yyyy-mm-dd)'
+
+      gitrev_tmp=string(gitrev[0])
+keyw = [keyw, 'GITREV'] & keyv = [keyv, gitrev_tmp]
+keyc = [keyc, ' grisred git revision']
+      
+      gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  
+keyw = [keyw, 'GITREP']
+keyv = [keyv, gitrev_tmp]
+keyc = [keyc, ' grisred git repository']
+
+      if keyword_set(fts) then nfts=1 else nfts=0
+keyw = [keyw, 'FTSFLAT']
+keyv = [keyv, string(nfts,f='(a18)')]
+keyc = [keyc, ' flatfield calibration with FTS spectrum']
+
+      if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
+      if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
+      for ii=0,n_elements(ftsfit)-1 do begin
+      fs='FF'+strcompress(string(ii+1),/remove_all)
+keyw = [keyw, fs+'WLOFF']
+keyv = [keyv, string(ftsfit[ii].wloff,f='(A18)')]
+keyc = [keyc, ' WL-offset '+fs]
+
+keyw = [keyw, fs+'WLDSP']
+keyv = [keyv, string(ftsfit[ii].wlbin,f='(a18)')]
+keyc = [keyc, ' WL-dispersion '+fs]
+
+keyw = [keyw, fs+'FWHMA']
+keyv = [keyv, string(ftsfit[ii].fwhm_a,f='(a18)')]
+keyc = [keyc, ' spectral FWHM [A] '+fs]
+
+keyw = [keyw, fs+'FWHMP']
+keyv = [keyv, string(ftsfit[ii].fwhm_pix,f='(a18)')]
+keyc = [keyc,  ' spectral FWHM [pix] '+fs]
+
+keyw = [keyw, fs+'STRAY']
+keyv = [keyv, string(ftsfit[ii].stray,f='(a18)')]
+keyc = [keyc, ' spectral straylight '+fs]
+
+keyw = [keyw, fs+'NPOLY']
+keyv = [keyv, string(ftsfit[ii].npoly,f='(a18)')]
+keyc = [keyc,  ' order of fitted polynomial '+fs]
+
+keyw = [keyw, fs+'FITNS']
+keyv = [keyv, string(ftsfit[ii].fitness,f='(a18)')]
+keyc = [keyc, ' fitness of PIKAIA fit to FTS '+fs]
+      endfor
+
+; to add the keywords
+patch_hdr_v6,map_out,keyw,keyv,keyc
 
 return
 

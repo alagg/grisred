@@ -1,8 +1,8 @@
-ca95e5d596be6cbffdc8318c10c322231ad71acf
+32099424b1b3996d940a4ebdde3d6b776bb0ee16
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit ca95e5d596be6cbffdc8318c10c322231ad71acf
+commit 32099424b1b3996d940a4ebdde3d6b776bb0ee16
 Author: IRPOLAR Project <irpolar@mojo.mps.mpg.de>
-Date:   Tue May 8 10:26:53 2018 +0200
+Date:   Tue May 8 15:33:01 2018 +0200
 
-    Testing assoc
+    commented bugs header
