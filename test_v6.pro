@@ -19,32 +19,49 @@ endif else gitrev=['n/a','n/a n/a']
 print,'GIT-revision: ',gitrev
 
                                 ;add git revision 
-      igv=0
-      hdr2  = hdr
-      hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
+;       igv=0
+;       hdr2  = hdr
+;       hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
 
 ; ; ; ; ; ; Test making sure that the header satisfies the 80 characters width
 ;       hdrstr=string(hdrstr,format='(A80)')
 ;       hdrstr=strtrim(hdrstr,1)
 
+; ; ; ; ; 
+; ; ; ; ; numb    = indgen(10)
+; ; ; ; ; alphabet=string(bindgen(1,26)+(byte('a'))[0])
+; ; ; ; ; strtmp = ''
+; ; ; ; ; for j=0,strlen(gitrev[0])-1 do begin
+; ; ; ; ; tmp  = strmid(gitrev[0],j,1)
+; ; ; ; ; for i=0,n_elements(numb)-1 do begin
+; ; ; ; ; mkstr=where(strmatch(tmp,strtrim(numb[i],1)) eq 1,nmk)
+; ; ; ; ; if nmk gt 0 then strtmp +=strtrim(numb[i],1)
+; ; ; ; ; endfor ; for i
+; ; ; ; ; for i=0,n_elements(alphabet)-1 do begin
+; ; ; ; ; mkstr=where(strmatch(tmp,strtrim(alphabet[i],1)) eq 1,nmk)
+; ; ; ; ; if nmk gt 0 then strtmp +=strtrim(alphabet[i],1)
+; ; ; ; ; endfor ; for i
+; ; ; ; ; endfor ; for j
+; ; ; ; ; print,strtmp
+; ; ; ; ; stop
 
-numb    = indgen(10)
-alphabet=string(bindgen(1,26)+(byte('a'))[0])
-strtmp = ''
-for j=0,strlen(gitrev[0])-1 do begin
-tmp  = strmid(gitrev[0],j,1)
-for i=0,n_elements(numb)-1 do begin
-mkstr=where(strmatch(tmp,strtrim(numb[i],1)) eq 1,nmk)
-if nmk gt 0 then strtmp +=strtrim(numb[i],1)
-endfor ; for i
-for i=0,n_elements(alphabet)-1 do begin
-mkstr=where(strmatch(tmp,strtrim(alphabet[i],1)) eq 1,nmk)
-if nmk gt 0 then strtmp +=strtrim(alphabet[i],1)
-endfor ; for i
-endfor ; for j
-print,strtmp
+dir='./level1/'
+map_out = dir+'09jun16.100'
+data = readfits(map_out+'cc',hdrstr)
+gitrev_tmp=string(gitrev[0],format='(A18)')
+sxaddpar,hdrstr,'GITREV',gitrev_tmp,$
+        ' grisred git revision',before='FILENAME'
+gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
+gitrev_tmp=strmid(gitrev_tmp,strpos(gitrev_tmp,'com')+3)    ; ''
+gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp, /EXTRACT,'/'), ' ')
+gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp,/regex, /EXTRACT,'.git'))
+gitrev_tmp=string(gitrev_tmp,format='(A18)')
+sxaddpar,hdrstr,'GITREP',gitrev_tmp, $
+         ' grisred git repository',before='FILENAME'
+WRITEFITS, map_out+'cc', data, hdrstr;,append=1
+
+
 stop
-
 ; ; ; ; WORKED! Test making the systime shorter just keeping the importand info
       tim = BIN_DATE(systime(0))
       tim = string(tim[0],f='(I04)')+'-'+string(tim[1],f='(I02)')+$

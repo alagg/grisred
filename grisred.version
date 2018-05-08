@@ -1,8 +1,8 @@
-aedaab8a1f0203ea7ee8b5aa927d1121f18135b0
+60d72e77aaa99df564501578ee6b6bbf13959060
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit aedaab8a1f0203ea7ee8b5aa927d1121f18135b0
+commit 60d72e77aaa99df564501578ee6b6bbf13959060
 Author: IRPOLAR Project <irpolar@mojo.mps.mpg.de>
-Date:   Thu May 3 15:21:10 2018 +0200
+Date:   Mon May 7 11:00:34 2018 +0200
 
-    remove overwriting header - Sebastian
+    rude try - did not work

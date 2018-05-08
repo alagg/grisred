@@ -48,7 +48,7 @@ gitri=routine_info('gris_v6',/source)
 gitfi=file_info(file_dirname(gitri.path)+'/grisred.version')
 if gitfi.exists then begin
   gitrev=strarr(2)
-  openr,unit,/get_lun,gitfi.name & readf,unit,gitrev & free_lun,unit
+  openr,nlun,/get_lun,gitfi.name & readf,nlun,gitrev & free_lun,nlun
 endif else gitrev=['n/a','n/a n/a']
 print,'GIT-revision: ',gitrev
 
@@ -408,6 +408,8 @@ for jj=0,nmap_in-1 do begin
          datos=assoc(unit,lonarr(dd.naxis1,dd.naxis2),long(2880)*nrhdr)
       endif
    endelse 
+   print,'Datos assoc ->>>>>'
+   help,datos
 
    im_a=fltarr(4,tam(1),tam(2))
    im_b=fltarr(4,tam(1),tam(2))
@@ -429,108 +431,88 @@ for jj=0,nmap_in-1 do begin
 
       get_lun,unit_out
       openw,unit_out,map_out+'cc'
-
                                 ;add git revision 
       igv=0
-      hdr2  = hdr
       hdrstr=string(reform(byte(strjoin(hdr,/single)),80,36*nrhdr))
-
-; ; ; ; ; ; Test making sure that the header satisfies the 80 characters width
-;       hdrstr=string(hdrstr,format='(A80)')
-;       hdrstr=strtrim(hdrstr,1)
-
-; ; ; ; WORKED! Test making the systime shorter just keeping the importand info
-      tim = BIN_DATE(systime(0))
-      tim = string(tim[0],f='(I04)')+'-'+string(tim[1],f='(I02)')+$
-            '-'+string(tim[2],f='(I02)')
-      sxaddpar,hdrstr,'DATERED',string(tim),$
-      ' date of data reduction (yyyy-mm-dd)', before='FILENAME'
-
-; ; ; ; ; Test making sure that the query satisfies the width requirements and 
-; ; ; ; ; eliminating any posible character that my cause a problem
-;       gitrev_tmp=(strsplit(gitrev[1],/extract))[0] 
-;       sxaddpar,hdrstr,'GITREV',gitrev_tmp,$
-;                ' grisred git revision',before='FILENAME'
-;       gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
-;        gitrev_tmp=strmid(gitrev_tmp,strpos(gitrev_tmp,'com')+3)    ; ''
-;        gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp, /EXTRACT,'/'), ' ')
-;        gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp,/regex, /EXTRACT,'.git'))
-;        gitrev_tmp=string(gitrev_tmp,format='(A18)')
-;       sxaddpar,hdrstr,'GITREP',gitrev_tmp, $
-;                 ' grisred git repository',before='FILENAME'
-
-
-; ; ; ; ; ; Test trying to write the GIT query on the comment section 
-; ;       gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
-;       sxaddpar,hdrstr,'GITREP','git repository',' "'+gitrev_tmp+'"', before='FILENAME',Format='a18'
-;       gitrev_tmp=string(gitrev[0])
-;       sxaddpar,hdrstr,'GITREV','git revision',' "'+gitrev_tmp+'"',before='FILENAME',Format='a18'
-
-
-;;;; Test trying to add the git version as a comment
-gitrev_tmp=(strsplit(gitrev[0],/extract))[0]
-numb    = indgen(10)
-alphabet=string(bindgen(1,26)+(byte('a'))[0])
-strtmp = ''
-for j=0,strlen(gitrev_tmp)-1 do begin
-tmp  = strmid(gitrev_tmp,j,1)
-for i=0,n_elements(numb)-1 do begin
-mkstr=where(strmatch(tmp,strtrim(numb[i],1)) eq 1,nmk)
-if nmk gt 0 then strtmp +=strtrim(numb[i],1)
-endfor ; for i
-for i=0,n_elements(alphabet)-1 do begin
-mkstr=where(strmatch(tmp,strtrim(alphabet[i],1)) eq 1,nmk)
-if nmk gt 0 then strtmp +=strtrim(alphabet[i],1)
-endfor ; for i
-endfor ; for j
-
-gitrev_tmp = strtmp
-sxaddpar,hdrstr,'COMMENT ', 'grisred git revision'
-sxaddpar,hdrstr,'COMMENT ', string(gitrev_tmp,/PRINT)
-; gitrev_tmp=string((strsplit(gitrev[1],/extract))[1])
-; sxaddpar,hdrstr,'COMMENT ', 'grisred git repository'
-; sxaddpar,hdrstr,'COMMENT ', string(gitrev_tmp,/PRINT)
 
       ;add FTS fit parameters
       if keyword_set(fts) then nfts=1 else nfts=0
-      sxaddpar,hdrstr,'FTSFLAT',nfts,$
+      sxaddpar,hdrstr,'FTSFLAT',strcompress(string(nfts,f='(A20)'),/remove_all),$
                 ' flatfield calibration with FTS spectrum',before='LC1-1'
       if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
       if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
       for ii=0,n_elements(ftsfit)-1 do begin
         fs='FF'+strcompress(string(ii+1),/remove_all)
-        sxaddpar,hdrstr,fs+'WLOFF',ftsfit[ii].wloff,' WL-offset '+fs, $
+        sxaddpar,hdrstr,fs+'WLOFF',strcompress(string(ftsfit[ii].wloff,f='(A20)'),/remove_all),' WL-offset '+fs, $
                  before='LC1-1'
-        sxaddpar,hdrstr,fs+'WLDSP',ftsfit[ii].wlbin,' WL-dispersion '+fs, $
+                 hdrstr=remove_blankline(hdrstr)
+        sxaddpar,hdrstr,fs+'WLDSP',strcompress(string(ftsfit[ii].wlbin,f='(A20)'),/remove_all),' WL-dispersion '+fs, $
                  before='LC1-1'
-        sxaddpar,hdrstr,fs+'FWHMA',ftsfit[ii].fwhm_a,' spectral FWHM [A] '+fs, $
+                 hdrstr=remove_blankline(hdrstr)
+        sxaddpar,hdrstr,fs+'FWHMA',strcompress(string(ftsfit[ii].fwhm_a,f='(A20)'),/remove_all),' spectral FWHM [A] '+fs, $
                  before='LC1-1'
-        sxaddpar,hdrstr,fs+'FWHMP',ftsfit[ii].fwhm_pix, $
+                 hdrstr=remove_blankline(hdrstr)
+        sxaddpar,hdrstr,fs+'FWHMP',strcompress(string(ftsfit[ii].fwhm_pix,f='(A20)'),/remove_all), $
                  ' spectral FWHM [pix] '+fs,before='LC1-1'
-        sxaddpar,hdrstr,fs+'STRAY',ftsfit[ii].stray,' spectral straylight '+fs, $
+        sxaddpar,hdrstr,fs+'STRAY',strcompress(string(ftsfit[ii].stray,f='(A20)'),/remove_all),' spectral straylight '+fs, $
                  before='LC1-1'
-        sxaddpar,hdrstr,fs+'NPOLY',ftsfit[ii].npoly, $
+                 hdrstr=remove_blankline(hdrstr)
+        sxaddpar,hdrstr,fs+'NPOLY',strcompress(string(ftsfit[ii].npoly,f='(A20)'),/remove_all), $
                  ' order of fitted polynomial '+fs,before='LC1-1'
-        sxaddpar,hdrstr,fs+'FITNS',ftsfit[ii].fitness, $
+                 hdrstr=remove_blankline(hdrstr)
+        sxaddpar,hdrstr,fs+'FITNS',strcompress(string(ftsfit[ii].fitness,f='(A20)'),/remove_all), $
                  ' fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
+                 hdrstr=remove_blankline(hdrstr)
 
       endfor
-      sxaddpar,hdrstr,'BITPIX',fix(bitpix)
-      sxaddpar,hdrstr,'NAXIS1',i2-i1+1
-      sxaddpar,hdrstr,'NAXIS2',j2-j1+1
-      sxaddpar,hdrstr,'NAXIS3',4*fix(npos/step)
-      if(dd.telescope eq 'SVST') then $
-      sxaddpar,hdrstr,'TELESCOP',string(format='(a8)','SVST_COR'),before='LC1-1'
-      sxaddpar,hdrstr,'WAVELENG',round(lambda/10.),before='LC1-1'
-      sxaddpar,hdrstr,'DATAVERS',fix(1),' data version (I,Q,U,V crosstalk corrected)',before='LC1-1'
 
-      for j=0,nrhdr-1 do hdr[j]=strtrim(strjoin(hdrstr[j*36:(j+1)*36-1]),1)
-      ;remove blank spaces
-      blank_str=string(bytarr(80)+32B)
-      zblank=where(hdr eq blank_str,nblank)
-      if nblank gt 0 then for j=0,nblank-1 do hdr=remove_blankline(hdr)
-      writeu,unit_out,byte(hdr)
+;       sxaddpar,hdrstr,'BITPIX',fix(bitpix)
+;       sxaddpar,hdrstr,'NAXIS1',i2-i1+1
+;       sxaddpar,hdrstr,'NAXIS2',j2-j1+1
+;       sxaddpar,hdrstr,'NAXIS3',4*fix(npos/step)
+;       if(dd.telescope eq 'SVST') then $
+;       sxaddpar,hdrstr,'TELESCOP',string(format='(a8)','SVST_COR'),before='LC1-1'
+;       sxaddpar,hdrstr,'WAVELENG',round(lambda/10.),before='LC1-1'
+;       sxaddpar,hdrstr,'DATAVERS',fix(1),' data version (I,Q,U,V crosstalk corrected)',before='LC1-1'
+;       for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
+;       writeu,unit_out,byte(hdr)
 
+
+            for j=0,nrhdr-1 do hdr[j]=strjoin(hdrstr[j*36:(j+1)*36-1])
+            for j=0L,nrhdr-1 do begin
+            header=hdr(j)
+            
+            pos=strpos(hdr(j),'BITPIX  =')
+            if(pos ne -1) then strput,header,string(format='(A20)',fix(bitpix)),pos+10
+            
+            pos=strpos(header,'NAXIS1  =')
+            if(pos ne -1) then strput,header,string(format='(A20)',i2-i1+1),pos+10
+            
+            pos=strpos(header,'NAXIS2  =')
+            if(pos ne -1) then strput,header,string(format='(A20)',j2-j1+1),pos+10
+            
+            pos=strpos(header,'NAXIS3  =')
+            if(pos ne -1) then strput,header,string(format='(A20)',4*fix(npos/step)),pos+10
+            
+            pos=strpos(hdr(j),'TELESCOP=')
+            if(dd.telescope eq 'SVST' and pos ne -1) then $
+            strput,header,string(format='(a8)','SVST_COR'),pos+11
+            
+            pos=strpos(header,'WAVELENG=')
+            if(pos ne -1) then strput,header,string(format='(A20)',round(lambda/10.)),pos+10
+            
+            pos=strpos(hdr(j),'DATAVERS=')
+            if(pos ne -1) then begin
+            strput,header,string(format='(A20)',fix(1)),pos+10
+            tit='data version (I,Q,U,V crosstalk corrected)'
+            format_tit='(A'+strtrim(strlen(tit),2)+')'
+            strput,header,string(format=format_tit,tit),pos+33
+            endif
+            
+            hdr(j)=header
+            endfor
+            
+            writeu,unit_out,byte(hdr)
 
       if(bitpix eq 8) then begin
          dat_out=assoc(unit_out,bytarr(i2-i1+1,j2-j1+1),long(2880)*nrhdr)
@@ -539,19 +521,22 @@ sxaddpar,hdrstr,'COMMENT ', string(gitrev_tmp,/PRINT)
       endif else if(bitpix eq 32) then begin   
          dat_out=assoc(unit_out,lonarr(i2-i1+1,j2-j1+1),long(2880)*nrhdr)
       endif
+      print,'---->'
+      help,dat_out
+      
    endif
 
 
-   time=param_fits(hdr2,'UT      =',delimiter=':',vartype=1) 
+   time=param_fits(hdr,'UT      =',delimiter=':',vartype=1) 
    time=time(*,0)+(time(*,1)+time(*,2)/60.)/60.
-   istep=param_fits(hdr2,'ISTEP   =',vartype=1)
+   istep=param_fits(hdr,'ISTEP   =',vartype=1)
    if(old eq 0) then begin
-      date=param_fits(hdr2,'DATE-OBS=',delimiter='-',vartype=1)
+      date=param_fits(hdr,'DATE-OBS=',delimiter='-',vartype=1)
       dum=date[0]
       date[0]=date[2]
       date[2]=dum
    endif else begin
-      date=param_fits(hdr2,'DATE    =',delimiter='/',vartype=1)
+      date=param_fits(hdr,'DATE    =',delimiter='/',vartype=1)
       date[2]=date[2]+1900
    endelse
 
@@ -842,7 +827,8 @@ sxaddpar,hdrstr,'COMMENT ', string(gitrev_tmp,/PRINT)
 
          tvwinp,compress([reform(5*im2[1,*,*]),5*reform(im2[2,*,*]),reform(im2[3,*,*])],2)
       endif  else begin
-   
+      print,'before end 1'
+      help,dat_out
          if(!version.arch eq "alpha" or strmid(!version.arch,0,3) eq "x86") then begin   
             if(bitpix eq 8) then begin
                for j=0,3 do dat_out(4*i+j) = byte(im2(j,*,*)/factor)
@@ -869,6 +855,8 @@ sxaddpar,hdrstr,'COMMENT ', string(gitrev_tmp,/PRINT)
             endif
          endelse
       endelse      
+      print,'before end 2'
+      help,dat_out
    endfor
    
    free_lun,unit
@@ -885,21 +873,34 @@ sxaddpar,hdrstr,'COMMENT ', string(gitrev_tmp,/PRINT)
 
 endfor
 
-return
+; 
+; print,'aaaaaaaaaaaaaaaaaaa-------------->>>>>>>>>'
+; patch_hdr_v6,map_out
+; print,'aaaaaaaaaaaaaaaaaaa--------------<<<<<<<<<<<<<<<<<<<<'
+; ; 
 
-; ; ; ; Test trying to reading and then writing the fits file with the GIT characters
+; hdrstr = ''
+; ; ; ; WORKED! Test making the systime shorter just keeping the importand info
+; ; tim = BIN_DATE(systime(0))
+; ; tim = string(tim[0],f='(I04)')+'-'+string(tim[1],f='(I02)')+$
+; ; '-'+string(tim[2],f='(I02)')
+; ; sxaddpar,hdrstr,'DATERED',string(tim),$
+; ; ' date of data reduction (yyyy-mm-dd)', before='FILENAME'
+; data = readfits(map_out+'cc',hdrstr)
+; gitrev_tmp=string(gitrev[0])
 
-; data = readfits(map_out+'cc',hdrstr,/sil)
-; gitrev_tmp=string(gitrev[0],format='(A18)')
 ; sxaddpar,hdrstr,'GITREV',gitrev_tmp,$
-;         ' grisred git revision',before='FILENAME'
+; ' grisred git revision',before='FILENAME'
 ; gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  ;Cutting no necessary info
-; gitrev_tmp=strmid(gitrev_tmp,strpos(gitrev_tmp,'com')+3)    ; ''
-; gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp, /EXTRACT,'/'), ' ')
-; gitrev_tmp=STRJOIN(STRSPLIT(gitrev_tmp,/regex, /EXTRACT,'.git'))
-; gitrev_tmp=string(gitrev_tmp,format='(A18)')
 ; sxaddpar,hdrstr,'GITREP',gitrev_tmp, $
-;          ' grisred git repository',before='FILENAME'
-; WRITEFITS, map_out+'cc', data, hdrstr;,append=1
+; ' grisred git repository',before='FILENAME'
+;remove blank spaces
+; ; blank_str=string(bytarr(80)+32B)
+; ; zblank=where(hdrstr eq blank_str,nblank)
+; ; if nblank gt 0 then for j=0,nblank-1 do hdrstr=remove_blankline(hdrstr)
+; WRITEFITS, map_out+'cc', data, hdrstr
+
+
+return
 
 end
