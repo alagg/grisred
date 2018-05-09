@@ -818,63 +818,43 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     
     endfor
     
+    return
+  
     ; add git revision to the header
     ; patch added to temporary solve the header character bug. 
     ; It just added the new keywords and the "END" on the header.
     ; Sebastian Castellanos Duran - May 2018
-    keyw ='DATEREDU'
-    keyv = systime(0)
-    keyc = ' date of data reduction (yyyy-mm-dd)'
-    
+    data = readfits(map_out+'cc',hdrstr)
+    sxaddpar,hdrstr,'DATEREDU',systime(0),' date of data reduction (yyyy-mm-dd)',before='LC1-1'
+
     gitrev_tmp=string(gitrev[0])
-    keyw = [keyw, 'GITREV'] & keyv = [keyv, gitrev_tmp]
-    keyc = [keyc, ' grisred git revision']
-    
+    sxaddpar,hdrstr,'GITREV',gitrev_tmp,' grisred git revision',before='LC1-1'
+
     gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  
-    keyw = [keyw, 'GITREP']
-    keyv = [keyv, gitrev_tmp]
-    keyc = [keyc, ' grisred git repository']
+    sxaddpar,hdrstr,'GITREP',gitrev_tmp,' grisred git repository',before='LC1-1'
     
     if keyword_set(fts) then nfts=1 else nfts=0
-    keyw = [keyw, 'FTSFLAT']
-    keyv = [keyv, string(nfts,f='(a18)')]
-    keyc = [keyc, ' flatfield calibration with FTS spectrum']
+    sxaddpar,hdrstr,'FTSFLAT',string(nfts,f='(a18)'),' flatfield calibration with FTS spectrum',before='LC1-1'
     
     if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
     if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
     for ii=0,n_elements(ftsfit)-1 do begin
     fs='FF'+strcompress(string(ii+1),/remove_all)
-    keyw = [keyw, fs+'WLOFF']
-    keyv = [keyv, string(ftsfit[ii].wloff,f='(A18)')]
-    keyc = [keyc, ' WL-offset '+fs]
-    
-    keyw = [keyw, fs+'WLDSP']
-    keyv = [keyv, string(ftsfit[ii].wlbin,f='(a18)')]
-    keyc = [keyc, ' WL-dispersion '+fs]
-    
-    keyw = [keyw, fs+'FWHMA']
-    keyv = [keyv, string(ftsfit[ii].fwhm_a,f='(a18)')]
-    keyc = [keyc, ' spectral FWHM [A] '+fs]
-    
-    keyw = [keyw, fs+'FWHMP']
-    keyv = [keyv, string(ftsfit[ii].fwhm_pix,f='(a18)')]
-    keyc = [keyc,  ' spectral FWHM [pix] '+fs]
-    
-    keyw = [keyw, fs+'STRAY']
-    keyv = [keyv, string(ftsfit[ii].stray,f='(a18)')]
-    keyc = [keyc, ' spectral straylight '+fs]
-    
-    keyw = [keyw, fs+'NPOLY']
-    keyv = [keyv, string(ftsfit[ii].npoly,f='(a18)')]
-    keyc = [keyc,  ' order of fitted polynomial '+fs]
-    
-    keyw = [keyw, fs+'FITNS']
-    keyv = [keyv, string(ftsfit[ii].fitness,f='(a18)')]
-    keyc = [keyc, ' fitness of PIKAIA fit to FTS '+fs]
+    sxaddpar,hdrstr,fs+'WLOFF',ftsfit[ii].wloff,' WL-offset ',before='LC1-1'
+    sxaddpar,hdrstr,fs+'WLDSP',ftsfit[ii].wlbin,' WL-dispersion '+fs,before='LC1-1'
+    sxaddpar,hdrstr,fs+'FWHMA',ftsfit[ii].fwhm_a,' spectral FWHM [A] '+fs,before='LC1-1'
+    sxaddpar,hdrstr,fs+'FWHMP',ftsfit[ii].fwhm_pix,' spectral FWHM [pix] '+fs,before='LC1-1'
+    sxaddpar,hdrstr,fs+'STRAY',ftsfit[ii].stray,' spectral straylight '+fs,before='LC1-1'
+    sxaddpar,hdrstr,fs+'NPOLY',ftsfit[ii].npoly,' order of fitted polynomial '+fs,before='LC1-1'
+    sxaddpar,hdrstr,fs+'FITNS',ftsfit[ii].fitness,' fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
     endfor
     
-    ; to add the keywords
-    patch_hdr_v6,map_out,keyw,keyv,keyc
+    ;;remove blank spaces
+    blank_str=string(bytarr(80)+32B)
+    zblank=where(hdrstr eq blank_str,nblank)
+    if nblank gt 0 then for j=0,nblank-1 do hdrstr=remove_blankline(hdrstr)
     
-    return
+    WRITEFITS, map_out+'cc', data, hdrstr
+    
+
   end

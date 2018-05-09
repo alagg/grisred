@@ -1,0 +1,181 @@
+; Test cases that presented the problem before.
+; Now they are running normally. The 4d cubes 
+; are already done and are located in level1/ folders
+
+; 09jun16.002
+; 09jun16.013
+; 06jun16.010
+; 06jun16.011
+; 09jun16.006 
+; 17sep15.016
+; 09jun16.004
+
+
+;.r patch_hdr_v6
+;map = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/level1/09jun16.002-01'
+;patch_hdr_v6,map,keyw,keyv,keyc
+
+;data= readfits(map+'cc')
+
+
+;----
+
+
+;; Flat field
+
+
+.r gris_v6
+.r gris_v6
+
+
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+cd, path
+dir='./level0/'
+fileff=dir+['09jun16.001']
+filecal=dir+['09jun16.000']
+map=dir+'09jun16.100'
+
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+gris_cc2fits4d,path+'./level1/*100*cc',outdir='./level1/' 
+
+
+;----
+
+.r gris_v6
+
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+cd, path
+dir='./level0/'
+fileff=dir+['09jun16.001']
+filecal=dir+['09jun16.000']
+map=dir+'09jun16.002'
+
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+.r gris_cc2fits4d
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+gris_cc2fits4d,path+'./level1/*002*cc',outdir='./level1/' 
+
+
+;---- 
+
+
+.r gris_v6
+
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+
+cd, path
+dir='./level0/'
+fileff=dir+['09jun16.012','09jun16.014']
+filecal=dir+['09jun16.015']
+map=dir+'09jun16.013'
+
+
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+.r gris_cc2fits4d
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+gris_cc2fits4d,path+'./level1/*013*cc',outdir='./level1/' 
+
+
+
+;---- 
+
+
+.r gris_v6
+
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+
+cd, path
+dir='./level0/'
+fileff=dir+['09jun16.003','09jun16.005']
+filecal=dir+['09jun16.008']
+map=dir+'09jun16.004'
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+.r gris_cc2fits4d
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+gris_cc2fits4d,path+'./level1/*004*cc',outdir='./level1/' 
+
+
+;---- 
+
+
+.r gris_v6
+
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/06jun16/'
+
+cd, path
+dir='./level0/'
+fileff=dir+['06jun16.012']
+filecal=dir+['06jun16.013']
+map=dir+'06jun16.010'
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+gris_cc2fits4d,path+'./level1/*010*cc',outdir='./level1/' 
+
+
+;---- 
+
+
+.r gris_v6
+
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/06jun16/'
+
+cd, path
+dir='./level0/'
+fileff=dir+['06jun16.012']
+filecal=dir+['06jun16.013']
+map=dir+'06jun16.011'
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+gris_cc2fits4d,path+'./level1/*011*cc',outdir='./level1/' 
+
+
+;---
+
+.r gris_v6
+
+path = '/data/slam/GREGOR-data/GREGOR-Sep15/gris/17sep15/'
+
+cd, path
+dir='./level0/'
+fileff=dir+['17sep15.015','17sep15.017']
+filecal=dir+['17sep15.014']
+map=dir+'17sep15.016'
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+gris_cc2fits4d,path+'./level1/*016*cc',outdir='./level1/' 
+
+
+;----
+
+.r gris_v6
+
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+cd, path
+dir='./level0/'
+fileff=dir+['09jun16.005','09jun16.007']
+filecal=dir+['09jun16.008']
+map=dir+'09jun16.006'
+
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+gris_cc2fits4d,path+'./level1/*006*cc',outdir='./level1/' 

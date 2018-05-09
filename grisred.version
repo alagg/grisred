@@ -1,8 +1,8 @@
-656eb6e1dd91dcd2ae0c1e72923be308f99d6b8d
+14668ec37830662552b37db560beddd24161bde6
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 656eb6e1dd91dcd2ae0c1e72923be308f99d6b8d
-Author: IRPOLAR Project <irpolar@mojo.mps.mpg.de>
-Date:   Wed May 9 13:16:57 2018 +0200
+commit 14668ec37830662552b37db560beddd24161bde6
+Author: castellanos-duran <castellanos@mps.mpg.de>
+Date:   Wed May 9 13:22:11 2018 +0200
 
     Fixed header problem with patch- Sebastian
