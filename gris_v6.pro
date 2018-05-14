@@ -368,6 +368,7 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     for jj=0,nmap_in-1 do begin
     map_in=files(jj)
     print,map_in
+    map_hdr = map_in+'cc'
     dum=rfits_im(map_in,1,dd,hdr,nrhdr,/badpix)
     tam=size(dum)
     close,1
@@ -818,24 +819,24 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     
     endfor
     
-    return
+
   
     ; add git revision to the header
     ; patch added to temporary solve the header character bug. 
     ; It just added the new keywords and the "END" on the header.
     ; Sebastian Castellanos Duran - May 2018
-    data = readfits(map_out+'cc',hdrstr)
-    sxaddpar,hdrstr,'DATEREDU',systime(0),' date of data reduction (yyyy-mm-dd)',before='LC1-1'
-
-    gitrev_tmp=string(gitrev[0])
-    sxaddpar,hdrstr,'GITREV',gitrev_tmp,' grisred git revision',before='LC1-1'
-
-    gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  
-    sxaddpar,hdrstr,'GITREP',gitrev_tmp,' grisred git repository',before='LC1-1'
+    hdrstr='' & data =0.
+    
+    if strmatch(map_in_base,'*level0/*') eq 1 then begin 
+    pos = strpos(map_in_base,'level0/')
+    map_in_base=strmid(map_in_base,pos+7)
+    endif
+    ccfiles=file_search('./level1/'+map_in_base+'*cc')
+    print,'Writing keywords on the header --> '+ccfiles
+    data = readfits(ccfiles,hdrstr)
     
     if keyword_set(fts) then nfts=1 else nfts=0
-    sxaddpar,hdrstr,'FTSFLAT',string(nfts,f='(a18)'),' flatfield calibration with FTS spectrum',before='LC1-1'
-    
+    sxaddpar,hdrstr,'FTSFLAT',nfts,' flatfield calibration with FTS spectrum',before='LC1-1'
     if n_elements(ftsfit1) ne 0 then ftsfit=ftsfit1
     if n_elements(ftsfit2) ne 0 then ftsfit=[ftsfit1,ftsfit2]
     for ii=0,n_elements(ftsfit)-1 do begin
@@ -849,12 +850,20 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     sxaddpar,hdrstr,fs+'FITNS',ftsfit[ii].fitness,' fitness of PIKAIA fit to FTS '+fs,before='LC1-1'
     endfor
     
+    sxaddpar,hdrstr,'DATEREDU',systime(0),' date of data reduction (yyyy-mm-dd)',before='FILENAME'
+
+    gitrev_tmp=string(gitrev[0])
+    sxaddpar,hdrstr,'GITREV',gitrev_tmp,' grisred git revision',before='FILENAME'
+
+    gitrev_tmp=(strsplit(gitrev[1],/extract))[1]  
+    sxaddpar,hdrstr,'GITREP',gitrev_tmp,' grisred git repository',before='FILENAME'
+    
     ;;remove blank spaces
     blank_str=string(bytarr(80)+32B)
     zblank=where(hdrstr eq blank_str,nblank)
     if nblank gt 0 then for j=0,nblank-1 do hdrstr=remove_blankline(hdrstr)
     
-    WRITEFITS, map_out+'cc', data, hdrstr
+    WRITEFITS, ccfiles, data, hdrstr
     
-
+    return
   end
