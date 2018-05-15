@@ -33,7 +33,7 @@ if(keyword_set(order) eq 0) and fts then begin
 order=grating_angle(lambda)
 endif
 if(keyword_set(denoise_fft) eq 0) then denoise_fft=0
-if(keyword_set(pzero) eq 0) then pzero=41.8	;53.6
+if(keyword_set(pzero) eq 0) then pzero=53.6 ;41.8	;53.6
 if(keyword_set(noxtalk) eq 0) then noxtalk=0
 if(keyword_set(dust) eq 0) then dust=0
 if(keyword_set(maxshift) eq 0) then maxshift=5
@@ -831,9 +831,11 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     pos = strpos(map_in_base,'level0/')
     map_in_base=strmid(map_in_base,pos+7)
     endif
-    ccfiles=file_search('./level1/'+map_in_base+'*cc')
-    print,'Writing keywords on the header --> '+ccfiles
-    data = readfits(ccfiles,hdrstr)
+    ccfiles=file_search('./level1/'+map_in_base+'*cc',count=nfiles)
+    
+    for i=0,nfiles-1 do begin
+    print,'Writing keywords on the header --> '+ccfiles[i]
+    data = readfits(ccfiles[i],hdrstr)
     
     if keyword_set(fts) then nfts=1 else nfts=0
     sxaddpar,hdrstr,'FTSFLAT',nfts,' flatfield calibration with FTS spectrum',before='LC1-1'
@@ -863,7 +865,8 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     zblank=where(hdrstr eq blank_str,nblank)
     if nblank gt 0 then for j=0,nblank-1 do hdrstr=remove_blankline(hdrstr)
     
-    WRITEFITS, ccfiles, data, hdrstr
+    WRITEFITS, ccfiles[i], data, hdrstr
+    endfor
     
     return
   end
