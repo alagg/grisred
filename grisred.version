@@ -1,8 +1,8 @@
-30fb66979ebc7638a34bc08324bbd161a51a39e7
+c905a0c0b9c456d6b55f9acb6a6cff973d3dc3e8
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 30fb66979ebc7638a34bc08324bbd161a51a39e7
+commit c905a0c0b9c456d6b55f9acb6a6cff973d3dc3e8
 Author: castellanos-duran <castellanos@mps.mpg.de>
-Date:   Tue May 15 10:41:30 2018 +0200
+Date:   Tue May 15 15:05:21 2018 +0200
 
-    header WL keywords writing in all fits - sebastian
+    added DATAFLIP flag 4d cubes - Sebastian
