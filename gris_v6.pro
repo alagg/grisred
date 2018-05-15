@@ -33,7 +33,7 @@ if(keyword_set(order) eq 0) and fts then begin
 order=grating_angle(lambda)
 endif
 if(keyword_set(denoise_fft) eq 0) then denoise_fft=0
-if(keyword_set(pzero) eq 0) then pzero=53.6 ;41.8	;53.6
+if(keyword_set(pzero) eq 0) then pzero=41.8	;53.6
 if(keyword_set(noxtalk) eq 0) then noxtalk=0
 if(keyword_set(dust) eq 0) then dust=0
 if(keyword_set(maxshift) eq 0) then maxshift=5
@@ -477,7 +477,7 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     dat_out=assoc(unit_out,lonarr(i2-i1+1,j2-j1+1),long(2880)*nrhdr)
     endif
     endif
-    
+
     time=param_fits(hdr,'UT      =',delimiter=':',vartype=1) 
     time=time(*,0)+(time(*,1)+time(*,2)/60.)/60.
     istep=param_fits(hdr,'ISTEP   =',vartype=1)
@@ -827,11 +827,12 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     ; Sebastian Castellanos Duran - May 2018
     hdrstr='' & data =0.
     
+    
     if strmatch(map_in_base,'*level0/*') eq 1 then begin 
     pos = strpos(map_in_base,'level0/')
-    map_in_base=strmid(map_in_base,pos+7)
+    map_hdr=strmid(map_in_base,pos+7)
     endif
-    ccfiles=file_search('./level1/'+map_in_base+'*cc',count=nfiles)
+    ccfiles=file_search('./level1/'+map_hdr+'*cc',count=nfiles)
     
     for i=0,nfiles-1 do begin
     print,'Writing keywords on the header --> '+ccfiles[i]

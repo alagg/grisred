@@ -11,13 +11,6 @@
 ; 09jun16.004
 
 
-;.r patch_hdr_v6
-;map = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/level1/09jun16.002-01'
-;patch_hdr_v6,map,keyw,keyv,keyc
-
-;data= readfits(map+'cc')
-
-
 ;----
 
 
@@ -62,27 +55,7 @@ path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
 gris_cc2fits4d,path+'./level1/*002*cc',outdir='./level1/' 
 
 
-;---- 
 
-
-.r gris_v6
-
-path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
-
-cd, path
-dir='./level0/'
-fileff=dir+['09jun16.012','09jun16.014']
-filecal=dir+['09jun16.015']
-map=dir+'09jun16.013'
-
-
-gris_v6, map, fileff, filecal, lambda=10830.,/show 
-
-
-;creat 4d
-.r gris_cc2fits4d
-path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
-gris_cc2fits4d,path+'./level1/*013*cc',outdir='./level1/' 
 
 
 
@@ -109,6 +82,28 @@ gris_cc2fits4d,path+'./level1/*004*cc',outdir='./level1/'
 
 ;---- 
 
+
+.r gris_v6
+
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+
+cd, path
+dir='./level0/'
+fileff=dir+['09jun16.012','09jun16.014']
+filecal=dir+['09jun16.015']
+map=dir+'09jun16.013'
+
+
+gris_v6, map, fileff, filecal, lambda=10830.,/show 
+
+
+;creat 4d
+.r gris_cc2fits4d
+path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+gris_cc2fits4d,path+'./level1/*013*cc',outdir='./level1/' 
+
+
+;---
 
 .r gris_v6
 
@@ -143,24 +138,6 @@ gris_v6, map, fileff, filecal, lambda=10830.,/show
 
 ;creat 4d
 gris_cc2fits4d,path+'./level1/*011*cc',outdir='./level1/' 
-
-
-;---
-
-.r gris_v6
-
-path = '/data/slam/GREGOR-data/GREGOR-Sep15/gris/17sep15/'
-
-cd, path
-dir='./level0/'
-fileff=dir+['17sep15.015','17sep15.017']
-filecal=dir+['17sep15.014']
-map=dir+'17sep15.016'
-gris_v6, map, fileff, filecal, lambda=10830.,/show 
-
-
-;creat 4d
-gris_cc2fits4d,path+'./level1/*016*cc',outdir='./level1/' 
 
 
 ;----

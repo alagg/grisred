@@ -1,8 +1,8 @@
-d48796282c43e09a5a994558b73cc77d1bd2c24a
+4fc8301b4458059d27185aeafb57abe9cb72065b
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit d48796282c43e09a5a994558b73cc77d1bd2c24a
+commit 4fc8301b4458059d27185aeafb57abe9cb72065b
 Author: castellanos-duran <castellanos@mps.mpg.de>
-Date:   Mon May 14 11:52:08 2018 +0200
+Date:   Tue May 15 10:21:59 2018 +0200
 
-    Bug header character - path solved - Sebastian
+    header WL keywords writing in all fits
