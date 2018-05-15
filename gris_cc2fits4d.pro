@@ -151,11 +151,11 @@ endif
         flipped = 1
       endif
     endif
-    sxaddpar,hdr4d,'DATAFLIP',flipped,' data is flipped? yes:1, no:0',after='STEPANGL'
-    sxaddpar,headeric,'DATAFLIP',flipped,' data is flipped? yes:1, no:0',after='STEPANGL'
+    sxaddpar,hdr4d,'DATAFLIP',flipped,' data is flipped yes 1, no 0',after='STEPANGL'
     
   
   ;write 4d cube
+  print,'Writing 4d data'
   writefits,fout,cube,hdr4d
   
   ;write wl-extension

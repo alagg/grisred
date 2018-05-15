@@ -1,8 +1,8 @@
-4fc8301b4458059d27185aeafb57abe9cb72065b
+30fb66979ebc7638a34bc08324bbd161a51a39e7
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 4fc8301b4458059d27185aeafb57abe9cb72065b
+commit 30fb66979ebc7638a34bc08324bbd161a51a39e7
 Author: castellanos-duran <castellanos@mps.mpg.de>
-Date:   Tue May 15 10:21:59 2018 +0200
+Date:   Tue May 15 10:41:30 2018 +0200
 
-    header WL keywords writing in all fits
+    header WL keywords writing in all fits - sebastian
