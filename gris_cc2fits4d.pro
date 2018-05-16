@@ -146,11 +146,11 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip
       nsteps=ceil(float(ss[3])/steps)
       for ii=0,ss[1]-1 do begin
         for jj=0,ss[2]-1 do begin
-          ctmp=cube[ii,jj,*,*]
+          ctmp=reform(cube[ii,jj,*,*])
           for is=0,nsteps-1 do begin
             i0=is*nsteps
-            i1=(((is+1)*nsteps)<ss[1])-1
-            cube[ii,jj,i0:i1,*]=reverse(reform(ctmp[ii,jj,i0:i1,*]))
+            i1=(((is+1)*nsteps)<ss[3])-1
+            cube[ii,jj,i0:i1,*]=reverse(reform(ctmp[i0:i1,*]))
           endfor
         endfor
       endfor

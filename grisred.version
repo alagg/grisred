@@ -1,8 +1,8 @@
-5ad454d15f0cde9e29c490a68f2e14cfbf957e59
+b074d444a6c716d783019aba9e42ca24d78b1f55
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 5ad454d15f0cde9e29c490a68f2e14cfbf957e59
-Author: castellanos-duran <castellanos@mps.mpg.de>
-Date:   Tue May 15 15:18:45 2018 +0200
+commit b074d444a6c716d783019aba9e42ca24d78b1f55
+Author: andreas.lagg <lagg@mps.mpg.de>
+Date:   Wed May 16 11:48:56 2018 +0200
 
-    Pzero to 53.6 - Sowmya
+    take into account the STEPS header keyword when flipping the 4D fits maps
