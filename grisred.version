@@ -1,8 +1,8 @@
-b074d444a6c716d783019aba9e42ca24d78b1f55
+7b2e1c52397bc0292714e4f0a80c54e3e02615c4
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit b074d444a6c716d783019aba9e42ca24d78b1f55
+commit 7b2e1c52397bc0292714e4f0a80c54e3e02615c4
 Author: andreas.lagg <lagg@mps.mpg.de>
-Date:   Wed May 16 11:48:56 2018 +0200
+Date:   Wed May 16 13:19:39 2018 +0200
 
-    take into account the STEPS header keyword when flipping the 4D fits maps
+    bugfix in gris_cc2fits4d.pro
