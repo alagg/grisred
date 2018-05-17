@@ -77,7 +77,7 @@ gris_v6, map, fileff, filecal, lambda=10830.,/show
 ;creat 4d
 .r gris_cc2fits4d
 path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
-gris_cc2fits4d,path+'./level1/*004*cc',outdir='./level1/' 
+;gris_cc2fits4d,path+'./level1/*004*cc',outdir='./level1/' 
 
 
 ;---- 

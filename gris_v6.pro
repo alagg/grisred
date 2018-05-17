@@ -33,7 +33,7 @@ if(keyword_set(order) eq 0) and fts then begin
 order=grating_angle(lambda)
 endif
 if(keyword_set(denoise_fft) eq 0) then denoise_fft=0
-if(keyword_set(pzero) eq 0) then pzero=53.6 ;41.8
+if(keyword_set(pzero) eq 0) then pzero=53.6 ;41.8 
 if(keyword_set(noxtalk) eq 0) then noxtalk=0
 if(keyword_set(dust) eq 0) then dust=0
 if(keyword_set(maxshift) eq 0) then maxshift=5

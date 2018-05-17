@@ -65,7 +65,7 @@ endif else if (pos_tel ne -1 and pos_ins eq -1) then begin	; telescope calibrati
    delta=poly(lambda,coef)
 ;   print,'delta = ',delta
 endif else begin
-   print,'unknown calibration file. Please check!
+   print,'unknown calibration file. Please check!'
    stop
 endelse
 

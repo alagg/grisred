@@ -1,8 +1,9 @@
-b074d444a6c716d783019aba9e42ca24d78b1f55
+82161025818f0ffe8a2927c6b4b4b5a29971a81b
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit b074d444a6c716d783019aba9e42ca24d78b1f55
-Author: andreas.lagg <lagg@mps.mpg.de>
-Date:   Wed May 16 11:48:56 2018 +0200
+commit 82161025818f0ffe8a2927c6b4b4b5a29971a81b
+Merge: 8c59376 7b2e1c5
+Author: castellanos-duran <castellanos@mps.mpg.de>
+Date:   Wed May 16 14:20:36 2018 +0200
 
-    take into account the STEPS header keyword when flipping the 4D fits maps
+    Merge branch 'master' of https://github.com/alagg/grisred
