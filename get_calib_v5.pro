@@ -50,8 +50,12 @@ if(pos_tel eq -1 and pos_ins ne -1) then begin	; instrumental calibration
 endif else if (pos_tel ne -1 and pos_ins eq -1) then begin	; telescope calibration
    print,'TELESCOPE CALIBRATION'
    if(keyword_set(pzero) eq 0) then begin
+     if(date[2] lt 2016) then pzero=-1.2 $
+     else if(date[2] lt 2017) then pzero=53.6 $
+     else pzero=41.8            ; May 1st, 2017
+
 ;      if(date[2] lt 2016) then pzero=-1.2 else pzero=53.6
-      if(date[2] lt 2016) then pzero=-1.2 else pzero=41.8 ; May 1st, 2017
+;      if(date[2] lt 2016) then pzero=-1.2 else pzero=41.8 ; May 1st, 2017
    endif
 
 ;   print,'pzero = ',pzero

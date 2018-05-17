@@ -1,9 +1,8 @@
-82161025818f0ffe8a2927c6b4b4b5a29971a81b
+a91a50cfcb598026f3234ec0e45e4a8a79b48d5d
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 82161025818f0ffe8a2927c6b4b4b5a29971a81b
-Merge: 8c59376 7b2e1c5
+commit a91a50cfcb598026f3234ec0e45e4a8a79b48d5d
 Author: castellanos-duran <castellanos@mps.mpg.de>
-Date:   Wed May 16 14:20:36 2018 +0200
+Date:   Thu May 17 15:28:59 2018 +0200
 
-    Merge branch 'master' of https://github.com/alagg/grisred
+    Pzero changes
