@@ -33,12 +33,6 @@ if(keyword_set(order) eq 0) and fts then begin
 order=grating_angle(lambda)
 endif
 if(keyword_set(denoise_fft) eq 0) then denoise_fft=0
-<<<<<<< HEAD
-if(keyword_set(pzero) eq 0) then pzero=53.6 ;41.8 
-=======
-;better not define a default value of pzero. Leave this for get_calib_v5.pro
-;if(keyword_set(pzero) eq 0) then pzero=53.6 ;41.8
->>>>>>> a82a3935675e721dce061ed2d5af666e9b706595
 if(keyword_set(noxtalk) eq 0) then noxtalk=0
 if(keyword_set(dust) eq 0) then dust=0
 if(keyword_set(maxshift) eq 0) then maxshift=5
@@ -88,6 +82,10 @@ message,/cont,'Found raw data files: '+strjoin(files,', ')
 dum=rfits_im(files[0],1,dd,hdr)
 date=param_fits(hdr,'DATE-OBS=',delimiter='-',vartype=1)
 year=date[0]
+
+;compute pzero
+if(keyword_set(pzero) eq 0) then pzero=get_pzero(sxpar(hdr,'DATE-OBS'))
+
 
 if(year le 2016) then begin
 print,'2016'

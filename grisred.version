@@ -1,8 +1,9 @@
-a91a50cfcb598026f3234ec0e45e4a8a79b48d5d
+0a24fcd82a0228229539624578c05097d971a536
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit a91a50cfcb598026f3234ec0e45e4a8a79b48d5d
+commit 0a24fcd82a0228229539624578c05097d971a536
+Merge: a91a50c a82a393
 Author: castellanos-duran <castellanos@mps.mpg.de>
-Date:   Thu May 17 15:28:59 2018 +0200
+Date:   Thu May 17 15:30:31 2018 +0200
 
     Pzero changes
