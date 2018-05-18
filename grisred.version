@@ -1,9 +1,13 @@
-0a24fcd82a0228229539624578c05097d971a536
+14fadafb7d664b7ea9814d9b1bc75fc886f77422
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 0a24fcd82a0228229539624578c05097d971a536
-Merge: a91a50c a82a393
-Author: castellanos-duran <castellanos@mps.mpg.de>
-Date:   Thu May 17 15:30:31 2018 +0200
+commit 14fadafb7d664b7ea9814d9b1bc75fc886f77422
+Author: andreas.lagg <lagg@mps.mpg.de>
+Date:   Fri May 18 09:50:26 2018 +0200
 
-    Pzero changes
+    added get_pzero.pro.
+    This routine should compute the enigmatic pzero angle according to the observing date.
+    
+    Manolo's mail to this topic states (May 17, 2018)
+    
+    this pzero has always been a problem .... It should be a fixed value but it changes with time and nobody knows why. This pzero parameter is the relative orientation between the polarizer and the retarder of the main calibration unit, which is crucial (yes, crucial ) for the calibration. This year is again different ...

@@ -84,7 +84,7 @@ date=param_fits(hdr,'DATE-OBS=',delimiter='-',vartype=1)
 year=date[0]
 
 ;compute pzero
-if(keyword_set(pzero) eq 0) then pzero=get_pzero(sxpar(hdr,'DATE-OBS'))
+if(keyword_set(pzero) eq 0) then pzero=get_pzero(date)
 
 
 if(year le 2016) then begin

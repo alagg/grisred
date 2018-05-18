@@ -10,7 +10,8 @@ for j=2,8 do dc=dc+rfits_im(filecal,j,/badp)
 dc=dc/8.
 tam=size(dc)
 
-date=param_fits(hdr,'DATE-OBS=',delimiter='-',vartype=1)
+datobs=param_fits(hdr,'DATE-OBS=',delimiter='-',vartype=1)
+date=datobs
 dum=date[0]
 date[0]=date[2]
 date[2]=dum
@@ -49,7 +50,7 @@ if(pos_tel eq -1 and pos_ins ne -1) then begin	; instrumental calibration
 
 endif else if (pos_tel ne -1 and pos_ins eq -1) then begin	; telescope calibration
    print,'TELESCOPE CALIBRATION'
-   if(keyword_set(pzero) eq 0) then pzero=get_pzero(sxpar(hdr,'DATE-OBS'))
+   if(keyword_set(pzero) eq 0) then pzero=get_pzero(datobs)
 
 ;   print,'pzero = ',pzero
    thpol=param_fits(hdr,'TELPOLAR=',vartype=3)	;+pzero
