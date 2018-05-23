@@ -76,6 +76,7 @@ endif
 
 files=files(iraw)
 files=files(sort(files))
+ccfiles = files ;variable to save the names for writing the hdr at the end
 nmap_in=n_elements(files)
 message,/cont,'Found raw data files: '+strjoin(files,', ')
 
@@ -829,17 +830,18 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     ; It just added the new keywords and the "END" on the header.
     ; Sebastian Castellanos Duran - May 2018
     hdrstr='' & data =0.
-    
-    
-    if strmatch(map_in_base,'*level0/*') eq 1 then begin 
-    pos = strpos(map_in_base,'level0/')
-    map_hdr=strmid(map_in_base,pos+7)
-    endif
-    ccfiles=file_search('./level1/'+map_hdr+'*cc',count=nfiles)
-    
+    nfiles=n_elements(ccfiles)
+    print,'Writing keywords on the header --> '+ccfiles
     for i=0,nfiles-1 do begin
-    print,'Writing keywords on the header --> '+ccfiles[i]
-    data = readfits(ccfiles[i],hdrstr)
+    
+    tmp_files = ccfiles[i]+'cc'
+    if strmatch(tmp_files,'*level0/*') eq 1 then begin 
+      pos = strpos(tmp_files,'level0/')
+      map_hdr='./level1/'+strmid(tmp_files,pos+7)
+    endif
+    
+    print,'Writing keywords on the header --> '+map_hdr
+    data = readfits(map_hdr,hdrstr)
     
     if keyword_set(fts) then nfts=1 else nfts=0
     sxaddpar,hdrstr,'FTSFLAT',nfts,' flatfield calibration with FTS spectrum',before='LC1-1'
@@ -869,8 +871,7 @@ data=get_limits(median((im1+im2+im3+im4)/4.,3),lambda)
     zblank=where(hdrstr eq blank_str,nblank)
     if nblank gt 0 then for j=0,nblank-1 do hdrstr=remove_blankline(hdrstr)
     
-    WRITEFITS, ccfiles[i], data, hdrstr
+    WRITEFITS, map_hdr, data, hdrstr
     endfor
-    
     return
   end

@@ -1,4 +1,4 @@
-pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip
+pro gris_cc2fits4d_ff,ccmask,outdir=outdir,noflip=noflip
 
   if n_params() eq 0 then help=1b else begin
     ccfiles=file_search(ccmask,count=cnt)
@@ -126,6 +126,7 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip
                                 ;determine IC_HRSA
   tp=reform(sqrt(total(cube[*,1,*,*]^2+cube[*,2,*,*]^2+cube[*,3,*,*]^2,1))/nwl)
   wd=50<(min([nx,ny])/10)
+  if wd lt 7 then wd =7 ; line added for the flat filed cubes
   medtp=median(tp,wd)           ;boxcar to find most quiet region
   medall=medtp*0+!values.f_nan
   medall[wd:nx-wd-1,wd:ny-wd-1]=medtp[wd:nx-wd-1,wd:ny-wd-1]

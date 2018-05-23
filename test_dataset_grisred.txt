@@ -24,15 +24,17 @@
 path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
 cd, path
 dir='./level0/'
-fileff=dir+['09jun16.001']
-filecal=dir+['09jun16.000']
-map=dir+'09jun16.100'
+fileff=['09jun16.001']
+filecal=['09jun16.000']
+map='09jun16.100'
 
 gris_v6, map, fileff, filecal, lambda=10830.,/show 
 
 
 ;creat 4d
-gris_cc2fits4d,path+'./level1/*100*cc',outdir='./level1/' 
+.r gris_cc2fits4d_ff
+gris_cc2fits4d_ff,path+'./level1/*100*cc',outdir='./level1/' 
+
 
 
 ;----
@@ -42,9 +44,9 @@ gris_cc2fits4d,path+'./level1/*100*cc',outdir='./level1/'
 path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
 cd, path
 dir='./level0/'
-fileff=dir+['09jun16.001']
-filecal=dir+['09jun16.000']
-map=dir+'09jun16.002'
+fileff=['09jun16.001']
+filecal=['09jun16.000']
+map='09jun16.002'
 
 gris_v6, map, fileff, filecal, lambda=10830.,/show 
 
@@ -68,9 +70,9 @@ path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
 
 cd, path
 dir='./level0/'
-fileff=dir+['09jun16.003','09jun16.005']
-filecal=dir+['09jun16.008']
-map=dir+'09jun16.004'
+fileff=['09jun16.003','09jun16.005']
+filecal=['09jun16.008']
+map='09jun16.004'
 gris_v6, map, fileff, filecal, lambda=10830.,/show 
 
 
@@ -89,9 +91,9 @@ path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
 
 cd, path
 dir='./level0/'
-fileff=dir+['09jun16.012','09jun16.014']
-filecal=dir+['09jun16.015']
-map=dir+'09jun16.013'
+fileff=['09jun16.012','09jun16.014']
+filecal=['09jun16.015']
+map='09jun16.013'
 
 
 gris_v6, map, fileff, filecal, lambda=10830.,/show 
@@ -111,9 +113,9 @@ path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/06jun16/'
 
 cd, path
 dir='./level0/'
-fileff=dir+['06jun16.012']
-filecal=dir+['06jun16.013']
-map=dir+'06jun16.010'
+fileff=['06jun16.012']
+filecal=['06jun16.013']
+map='06jun16.010'
 gris_v6, map, fileff, filecal, lambda=10830.,/show 
 
 
@@ -130,9 +132,9 @@ path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/06jun16/'
 
 cd, path
 dir='./level0/'
-fileff=dir+['06jun16.012']
-filecal=dir+['06jun16.013']
-map=dir+'06jun16.011'
+fileff=['06jun16.012']
+filecal=['06jun16.013']
+map='06jun16.011'
 gris_v6, map, fileff, filecal, lambda=10830.,/show 
 
 
@@ -147,9 +149,9 @@ gris_cc2fits4d,path+'./level1/*011*cc',outdir='./level1/'
 path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
 cd, path
 dir='./level0/'
-fileff=dir+['09jun16.005','09jun16.007']
-filecal=dir+['09jun16.008']
-map=dir+'09jun16.006'
+fileff=['09jun16.005','09jun16.007']
+filecal=['09jun16.008']
+map='09jun16.006'
 
 gris_v6, map, fileff, filecal, lambda=10830.,/show 
 
