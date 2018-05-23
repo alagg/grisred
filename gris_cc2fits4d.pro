@@ -22,7 +22,7 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip
   print,ccfiles
   
   fout=strmid(ccfiles[0],0,strpos(ccfiles[0],'.',/reverse_search)+4)+'.4d.fits'
-  froot=(reverse(str_split(fout,'/',/extract)))[0]
+  froot=(reverse(strsplit(fout,'/',/extract)))[0]
   if keyword_set(outdir) then fout=outdir+froot
   print,'Output file: ',fout
                                 ;check write permission

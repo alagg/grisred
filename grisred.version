@@ -1,8 +1,8 @@
-b44a2c5c02488db1a6dcb173355d70b035f7c074
+9798fe4ced116697ba929b729c285daa28fc4145
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit b44a2c5c02488db1a6dcb173355d70b035f7c074
+commit 9798fe4ced116697ba929b729c285daa28fc4145
 Author: andreas.lagg <lagg@mps.mpg.de>
-Date:   Fri May 18 10:02:53 2018 +0200
+Date:   Wed May 23 15:28:23 2018 +0200
 
-    minor changes in getting pzero
+    replaced str_sep by strsplit in gris_cc2fits4d.pro
