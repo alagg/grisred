@@ -30,7 +30,7 @@ if [ -z $IDL_PATH ] ;then
     fi
 fi
     
-export IDL_PATH=$GRISRED_DIR:$GRISRED_DIR/varlib:$IDL_PATH #+$SSWDIR/gen:$IDL_PATH
+export IDL_PATH=$GRISRED_DIR:+$GRISRED_DIR/varlib:$IDL_PATH #+$SSWDIR/gen:$IDL_PATH
 DASH='==================================================================='
 #create IDL startup file
 INI=$GRISRED_DIR/grisini.pro

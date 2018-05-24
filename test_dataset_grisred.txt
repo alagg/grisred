@@ -11,16 +11,10 @@
 ; 09jun16.004
 
 
-;----
-
-
 ;; Flat field
 
 
 .r gris_v6
-.r gris_v6
-
-
 path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
 cd, path
 dir='./level0/'
@@ -32,8 +26,8 @@ gris_v6, map, fileff, filecal, lambda=10830.,/show
 
 
 ;creat 4d
-.r gris_cc2fits4d_ff
-gris_cc2fits4d_ff,path+'./level1/*100*cc',outdir='./level1/' 
+.r gris_cc2fits4d
+gris_cc2fits4d,path+'./level1/*100*cc',outdir='./level1/' 
 
 
 
@@ -54,20 +48,14 @@ gris_v6, map, fileff, filecal, lambda=10830.,/show
 ;creat 4d
 .r gris_cc2fits4d
 path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
+cd, path
 gris_cc2fits4d,path+'./level1/*002*cc',outdir='./level1/' 
-
-
-
-
 
 
 ;---- 
 
-
 .r gris_v6
-
 path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
-
 cd, path
 dir='./level0/'
 fileff=['09jun16.003','09jun16.005']
@@ -79,7 +67,7 @@ gris_v6, map, fileff, filecal, lambda=10830.,/show
 ;creat 4d
 .r gris_cc2fits4d
 path = '/data/slam/GREGOR-data/GREGOR-Jun16/gris/09jun16/'
-;gris_cc2fits4d,path+'./level1/*004*cc',outdir='./level1/' 
+gris_cc2fits4d,path+'./level1/*004*cc',outdir='./level1/' 
 
 
 ;---- 

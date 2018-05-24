@@ -1,4 +1,4 @@
-pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip
+pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip,flat_field=flat_field
 
   if n_params() eq 0 then help=1b else begin
     ccfiles=file_search(ccmask,count=cnt)
@@ -21,7 +21,8 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip
   print,'cc-files found: ',cnt
   print,ccfiles
   
-  fout=strmid(ccfiles[0],0,strpos(ccfiles[0],'.',/reverse_search)+4)+'.4d.fits'
+  name = strmid(ccfiles[0],0,strpos(ccfiles[0],'.',/reverse_search)+4)
+  fout = name +'.4d.fits'
   froot=(reverse(strsplit(fout,'/',/extract)))[0]
   if keyword_set(outdir) then fout=outdir+froot
   print,'Output file: ',fout
@@ -126,6 +127,7 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip
                                 ;determine IC_HRSA
   tp=reform(sqrt(total(cube[*,1,*,*]^2+cube[*,2,*,*]^2+cube[*,3,*,*]^2,1))/nwl)
   wd=50<(min([nx,ny])/10)
+  if keyword_set(flat_field) then wd = 7
   medtp=median(tp,wd)           ;boxcar to find most quiet region
   medall=medtp*0+!values.f_nan
   medall[wd:nx-wd-1,wd:ny-wd-1]=medtp[wd:nx-wd-1,wd:ny-wd-1]
@@ -187,6 +189,7 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip
     print,'ICONTIMG',icimg,' / average continuum level'
     print,'IC_HSRA',icont_hsra,' / average QS continuum level'
     writefits,fout,icont,headeric,append=1
+    fov_img_v1,icont,name,hdr=hdr ;plot continuum image
   endif else begin
     message,/cont,'No continuum image found. Please reduce the data using a newer' + $
             ' version of grisred before creating the 4D fits file.'
