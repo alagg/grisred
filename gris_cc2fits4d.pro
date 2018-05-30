@@ -191,7 +191,8 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip,flat_field=flat_field
     print,'ICONTIMG',icimg,' / average continuum level'
     print,'IC_HSRA',icont_hsra,' / average QS continuum level'
     writefits,fout,icont,headeric,append=1
-    fov_img_v1,icont,name,hdr=hdr ;plot continuum image
+;    fov_img_v1,icont,name,hdr=hdr ;plot continuum image
+    fov_img_v2,icont,name,hdr=hdr ;plot continuum image
   endif else begin
     message,/cont,'No continuum image found. Please reduce the data using a newer' + $
             ' version of grisred before creating the 4D fits file.'
