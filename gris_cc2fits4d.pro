@@ -113,29 +113,6 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip,flat_field=flat_field
   endif
   
   
-                                ;write out continuum image
-  icont=fltarr(nx,ny)
-  for ix=0,nx-1 do for iy=0,ny-1 do begin
-    icont(ix,iy)=get_cont(cube[*,0,ix,iy])
-  endfor
-                                ;get_histocont
-  maxic=max(smooth(icont,5))
-  iin=where(icont ge 0.5*maxic)
-  hist=histogram(icont[iin],nbin=100,loc=x)
-  dummy=max(hist,imax)
-  icimg=x[imax]
-                                ;determine IC_HRSA
-  tp=reform(sqrt(total(cube[*,1,*,*]^2+cube[*,2,*,*]^2+cube[*,3,*,*]^2,1))/nwl)
-  wd=50<(min([nx,ny])/10)
-  if keyword_set(flat_field) then wd = 7
-  medtp=median(tp,wd)           ;boxcar to find most quiet region
-  medall=medtp*0+!values.f_nan
-  medall[wd:nx-wd-1,wd:ny-wd-1]=medtp[wd:nx-wd-1,wd:ny-wd-1]
-  icmed=median(icont,wd)
-  iqs=where(icmed ge 0.9*max(icmed))
-  dummy=min(medall[iqs],/nan,imin)
-  ixy=array_indices(medall,iqs[imin])
-  icont_hsra=(median(icont,wd))[ixy[0],ixy[1]]
   
                                 ; added flip keyword in order to have the maps with the same orientation as 
                                 ; SDO - Sebastian Castellanos Duran - May 2018
@@ -156,13 +133,38 @@ pro gris_cc2fits4d,ccmask,outdir=outdir,noflip=noflip,flat_field=flat_field
           endfor
         endfor
       endfor
-      icont = reverse(icont)
       flipped = 1
     endif
   endif
   sxaddpar,hdr4d,'DATAFLIP',flipped,' data is flipped yes 1, no 0',after='STEPANGL'
+
+                                ;process continuum image after flipping
+                                ;write out continuum image
+  print,'Determining continuum level...'
+  icont=fltarr(nx,ny)
+  for ix=0,nx-1 do for iy=0,ny-1 do begin
+    icont[ix,iy]=get_cont(cube[*,0,ix,iy])
+  endfor
+                                ;get_histocont
+  maxic=max(smooth(icont,5))
+  iin=where(icont ge 0.5*maxic)
+  hist=histogram(icont[iin],nbin=100,loc=x)
+  dummy=max(hist,imax)
+  icimg=x[imax]
+                                ;determine IC_HRSA
+  tp=reform(sqrt(total(cube[*,1,*,*]^2+cube[*,2,*,*]^2+cube[*,3,*,*]^2,1))/nwl)
+  wd=50<(min([nx,ny])/10)
+  if keyword_set(flat_field) then wd = 7
+  medtp=median(tp,wd)           ;boxcar to find most quiet region
+  medall=medtp*0+!values.f_nan
+  medall[wd:nx-wd-1,wd:ny-wd-1]=medtp[wd:nx-wd-1,wd:ny-wd-1]
+  icmed=median(icont,wd)
+  iqs=where(icmed ge 0.9*max(icmed))
+  dummy=min(medall[iqs],/nan,imin)
+  ixy=array_indices(medall,iqs[imin])
+  icont_hsra=(median(icont,wd))[ixy[0],ixy[1]]
   
-  
+
                                 ;write 4d cube
   print,'Writing 4d data'
   writefits,fout,cube,hdr4d

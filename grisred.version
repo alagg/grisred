@@ -1,9 +1,8 @@
-1b1c6bea17149a76f6a145449d54c21ff8841f57
+c3f89e921c1408addb2da3e55cf76f3cd8f43c98
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 1b1c6bea17149a76f6a145449d54c21ff8841f57
-Merge: e595382 b4315ca
+commit c3f89e921c1408addb2da3e55cf76f3cd8f43c98
 Author: castellanos-duran <castellanos@mps.mpg.de>
-Date:   Wed May 23 18:18:37 2018 +0200
+Date:   Thu May 24 11:50:06 2018 +0200
 
-    Merge branch 'master' of https://github.com/alagg/grisred
+    Flat_field keyword and plot procedure - Sebastian
