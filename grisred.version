@@ -1,8 +1,8 @@
-44b9eb0d9e73b19a06525181ca290824b4d2edd5
+501022a86dad50c2965335f846001a7b0ddae556
 origin	https://github.com/alagg/grisred.git (fetch)
 origin	https://github.com/alagg/grisred.git (push)
-commit 44b9eb0d9e73b19a06525181ca290824b4d2edd5
+commit 501022a86dad50c2965335f846001a7b0ddae556
 Author: alagg <lagg@mps.mpg.de>
-Date:   Wed May 30 17:23:24 2018 +0100
+Date:   Wed May 30 17:26:44 2018 +0100
 
-    changed display routine for continuum image in gris_cc2fits4d
+    forgot to commit gris_cc2fits4d

@@ -1,6 +1,7 @@
 pro fov_img_v2, image,file,hdr=hdr
 
-if ~keyword_set(hdr) then scale=0.135 else scale = sxpar(hdr,'STEPSIZE')
+  if ~keyword_set(hdr) then scale=0.135 else scale = sxpar(hdr,'STEPSIZE')
+  if scale eq 0 then scale=0.135
 
 sd = size(image)
 
@@ -29,7 +30,7 @@ device,xsize=xpaper*1.1,ysize=xpaper,xoffset=0., yoffset=0.,/color,$
 loadct,0,/sil
 tit = strmid(file,strpos(file,'level1/')+7)
 
-image_cont_al,/cut,/aspect,/exact,contour=0,image,zrange=minmaxp(image,perc=99.5),title=tit
+image_cont_al,/cut,/aspect,/exact,contour=0,image,zrange=minmaxp(image,perc=99.5),title=tit,xtitle=xtit,ytitle=ytit,xrange=sd[1]*scale,yrange=sd[2]*0.135
 
 ;cgimage,image,/axis,/keep,tit=tit, AXKEYWORDS=axesk
 ;axis,xaxis=0,xrange=(!X.CRANGE)*scale,/xs,xtit=xtit,xtickint=round(sd[1]*scale/4)
